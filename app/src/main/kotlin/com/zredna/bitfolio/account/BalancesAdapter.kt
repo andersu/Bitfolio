@@ -5,18 +5,18 @@ import android.view.ViewGroup
 
 class BalancesAdapter: RecyclerView.Adapter<BalancesAdapter.BalanceViewHolder>() {
 
-    var balancesInBtc: List<BalanceInBtc> = emptyList()
+    var balances: List<Balance> = emptyList()
         set(value) {
             field = value
             notifyDataSetChanged()
         }
 
     override fun onBindViewHolder(holder: BalancesAdapter.BalanceViewHolder, position: Int) {
-        holder.balanceItemView.bind(balancesInBtc.get(position))
+        holder.balanceItemView.bind(balances.get(position))
     }
 
     override fun getItemCount(): Int {
-        return balancesInBtc.count()
+        return balances.count()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BalancesAdapter.BalanceViewHolder {

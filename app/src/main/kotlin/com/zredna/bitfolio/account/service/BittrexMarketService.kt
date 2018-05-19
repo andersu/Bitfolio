@@ -1,8 +1,8 @@
 package com.zredna.bitfolio.account.service
-
+/*
 import com.zredna.bitfolio.account.MarketSummary
 import com.zredna.bitfolio.account.converter.BittrexMarketSummaryDtoConverter
-import com.zredna.bittrex.apiclient.BittrexApiClient
+import com.zredna.bitfolio.account.api.bittrex.BittrexApiClient
 
 class BittrexMarketService(
         private val bittrexApiClient: BittrexApiClient,
@@ -18,4 +18,4 @@ class BittrexMarketService(
                 onFailure = onFailure
         )
     }
-}
+}*/

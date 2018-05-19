@@ -2,6 +2,7 @@ apply plugin: 'com.android.application'
 
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
 
 android {
     compileSdkVersion 27
@@ -39,12 +40,20 @@ dependencies {
     implementation 'org.koin:koin-android-architecture:0.9.2'
 
     // ViewModel and LiveData
-    def lifecycle_version = "1.1.1"
-
     implementation "android.arch.lifecycle:extensions:$lifecycle_version"
+
+    // Room
+    def room_version = "1.1.0"
+
+    implementation "android.arch.persistence.room:runtime:$room_version"
+    kapt "android.arch.persistence.room:compiler:$room_version"
+
+    // Retrofit
+    implementation 'com.squareup.retrofit2:retrofit:2.3.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.3.0'
+    implementation 'com.squareup.okhttp3:logging-interceptor:3.9.1'
 
     testImplementation 'junit:junit:4.12'
 
-    compile project(path: ':bittrexapiclient')
     compile project(path: ':binanceapiclient')
 }

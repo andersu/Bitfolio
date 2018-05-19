@@ -2,9 +2,8 @@ package com.zredna.bitfolio.account.service
 
 import com.zredna.bitfolio.account.Balance
 import com.zredna.bitfolio.account.converter.BittrexBalanceDtoConverter
-import com.zredna.bittrex.apiclient.BittrexApiClient
 
-class BittrexBalanceService(
+/*class BittrexBalanceService(
         private val bittrexApiClient: BittrexApiClient,
         private val bittrexBalanceDtoConverter: BittrexBalanceDtoConverter
 ) : BalanceService {
@@ -20,4 +19,4 @@ class BittrexBalanceService(
                 onFailure = onFailure
         )
     }
-}
+}*/

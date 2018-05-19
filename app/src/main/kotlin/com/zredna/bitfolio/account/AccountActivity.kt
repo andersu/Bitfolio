@@ -4,17 +4,7 @@ import android.arch.lifecycle.Observer
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
-import com.zredna.binanceapiclient.BinanceApiClient
 import com.zredna.bitfolio.R
-import com.zredna.bitfolio.account.converter.BinanceBalanceDtoConverter
-import com.zredna.bitfolio.account.converter.BinanceMarketSummaryDtoConverter
-import com.zredna.bitfolio.account.converter.BittrexBalanceDtoConverter
-import com.zredna.bitfolio.account.converter.BittrexMarketSummaryDtoConverter
-import com.zredna.bitfolio.account.service.BinanceBalanceService
-import com.zredna.bitfolio.account.service.BinanceMarketService
-import com.zredna.bitfolio.account.service.BittrexBalanceService
-import com.zredna.bitfolio.account.service.BittrexMarketService
-import com.zredna.bittrex.apiclient.BittrexApiClient
 import kotlinx.android.synthetic.main.activity_account.*
 import org.koin.android.architecture.ext.viewModel
 
@@ -30,10 +20,10 @@ class AccountActivity : AppCompatActivity() {
         initView()
 
         accountViewModel.balances.observe(this, Observer {
-            it?.let {
+            it?.data?.let {
                 swipeRefreshLayout.isRefreshing = false
                 enableBalanceList()
-                balancesAdapter.balancesInBtc = it
+                balancesAdapter.balances = it
             }
         })
 
@@ -49,12 +39,6 @@ class AccountActivity : AppCompatActivity() {
             accountViewModel.refresh()
 
         }
-    }
-
-    fun showBitcoinBalances(balanceInBtcs: List<BalanceInBtc>) {
-        swipeRefreshLayout.isRefreshing = false
-        enableBalanceList()
-        balancesAdapter.balancesInBtc = balanceInBtcs
     }
 
     fun showCouldNotGetBalances() {
