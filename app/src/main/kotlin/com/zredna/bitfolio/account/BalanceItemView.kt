@@ -18,8 +18,8 @@ class BalanceItemView @JvmOverloads constructor(
         inflater.inflate(R.layout.item_view_balance, this, true)
     }
 
-    fun bind(balance: Balance) {
+    fun bind(balance: BalanceInBtc) {
         textViewCurrency.text = balance.currency
-        textViewBalance.text = "฿ ${balance.balance}"
+        textViewBalance.text = "฿ ${balance.balanceInBtc}"
     }
 }

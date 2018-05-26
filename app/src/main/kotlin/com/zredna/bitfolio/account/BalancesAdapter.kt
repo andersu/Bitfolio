@@ -5,7 +5,7 @@ import android.view.ViewGroup
 
 class BalancesAdapter: RecyclerView.Adapter<BalancesAdapter.BalanceViewHolder>() {
 
-    var balances: List<Balance> = emptyList()
+    var balances: List<BalanceInBtc> = emptyList()
         set(value) {
             field = value
             notifyDataSetChanged()

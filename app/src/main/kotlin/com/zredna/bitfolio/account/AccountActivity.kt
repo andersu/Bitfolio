@@ -20,14 +20,17 @@ class AccountActivity : AppCompatActivity() {
         initView()
 
         accountViewModel.balances.observe(this, Observer {
-            it?.data?.let {
+            it?.let {
                 swipeRefreshLayout.isRefreshing = false
                 enableBalanceList()
                 balancesAdapter.balances = it
             }
         })
-
-        //presenter.onCreate()
+        accountViewModel.totalBalance.observe(this, Observer {
+            it?.let {
+                showTotalBalance(it)
+            }
+        })
     }
 
     private fun initView() {

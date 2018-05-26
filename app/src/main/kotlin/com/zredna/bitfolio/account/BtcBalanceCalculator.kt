@@ -12,7 +12,7 @@ class BtcBalanceCalculator {
                     }?.last?.let {
                         BalanceInBtc(
                                 balance.currency,
-                                it * balance.balance
+                                (it * balance.balance).roundTo8()
                         )
                     }
                 }

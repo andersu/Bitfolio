@@ -2,6 +2,7 @@ package com.zredna.bitfolio.account.di
 
 import android.arch.persistence.room.Room
 import com.zredna.binanceapiclient.BinanceApiClient
+import com.zredna.bitfolio.BuildConfig.DEBUG
 import com.zredna.bitfolio.account.AccountViewModel
 import com.zredna.bitfolio.account.AppExecutors
 import com.zredna.bitfolio.account.BtcBalanceCalculator
@@ -13,7 +14,7 @@ import com.zredna.bitfolio.account.db.BitfolioDatabase
 import com.zredna.bitfolio.account.repository.BalanceRepository
 import com.zredna.bitfolio.account.service.BinanceBalanceService
 import com.zredna.bitfolio.account.service.BinanceMarketService
-import com.zredna.bitfolio.account.api.bittrex.BittrexAccountApiProvider
+import com.zredna.bittrex.apiclient.BittrexApiClient
 import org.koin.android.architecture.ext.viewModel
 import org.koin.android.ext.koin.androidApplication
 import org.koin.dsl.module.Module
@@ -21,33 +22,30 @@ import org.koin.dsl.module.applicationContext
 
 // Koin module
 val bitfolioModule: Module = applicationContext {
-    viewModel { AccountViewModel(get()) } // get() will resolve Repository instance
-    bean {
-        BalanceRepository(
-                get(),
-                get(),
-                get(),
-                get<BinanceBalanceService>(),
-                get<BinanceMarketService>(),
-                get(),
-                get()
-        )
-    }
+    viewModel { AccountViewModel(get()) }
+    bean { BalanceRepository(get(), get(), get(), get(), get(), get()) }
 
     bean { AppExecutors.instance }
-    bean { BinanceBalanceService(get(), get()) }
-    bean { BinanceMarketService(get(), get()) }
     bean { BtcBalanceCalculator() }
 
     // Room Database instance
     bean {
-        Room.databaseBuilder(androidApplication(), BitfolioDatabase::class.java, "bitfolio.db")
-                .build()
+        Room.databaseBuilder(
+                androidApplication(),
+                BitfolioDatabase::class.java,
+                "bitfolio.db"
+        ).build()
     }
     // BalanceDAO
     bean { get<BitfolioDatabase>().balanceDao() }
 
-    bean { BittrexAccountApiProvider().provideBittrexAccountApi() }
+    bean {
+        val builder = BittrexApiClient.Builder()
+        if (DEBUG) {
+            builder.setLoggingEnabled()
+        }
+        builder.build()
+    }
     bean { BittrexBalanceDtoConverter() }
     bean { BittrexMarketSummaryDtoConverter() }
 
