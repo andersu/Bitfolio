@@ -2,6 +2,7 @@ package com.zredna.binanceapiclient
 
 import com.zredna.binanceapiclient.dto.AccountInformationDto
 import com.zredna.binanceapiclient.dto.MarketSummaryDto
+import io.reactivex.Single
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -11,22 +12,8 @@ class BinanceApiClient private constructor(
         private val binancePublicApi: BinancePublicApi
 ) {
 
-    fun getAccountInformation(onSuccess: (AccountInformationDto) -> Unit,
-                              onFailure: () -> Unit) {
-        binanceAccountApi.getAccountInformation().enqueue(object : Callback<AccountInformationDto> {
-            override fun onFailure(call: Call<AccountInformationDto>, t: Throwable?) {
-                onFailure()
-            }
-
-            override fun onResponse(
-                    call: Call<AccountInformationDto>,
-                    response: Response<AccountInformationDto>
-            ) {
-                response.body()?.let {
-                    onSuccess(it)
-                }
-            }
-        })
+    fun getAccountInformation(): Single<AccountInformationDto> {
+        return binanceAccountApi.getAccountInformation()
     }
 
     fun getAllPrices(onSuccess: (List<MarketSummaryDto>) -> Unit,

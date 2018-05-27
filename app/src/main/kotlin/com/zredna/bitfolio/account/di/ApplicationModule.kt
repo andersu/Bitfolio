@@ -12,8 +12,6 @@ import com.zredna.bitfolio.account.converter.BittrexBalanceDtoConverter
 import com.zredna.bitfolio.account.converter.BittrexMarketSummaryDtoConverter
 import com.zredna.bitfolio.account.db.BitfolioDatabase
 import com.zredna.bitfolio.account.repository.BalanceRepository
-import com.zredna.bitfolio.account.service.BinanceBalanceService
-import com.zredna.bitfolio.account.service.BinanceMarketService
 import com.zredna.bittrex.apiclient.BittrexApiClient
 import org.koin.android.architecture.ext.viewModel
 import org.koin.android.ext.koin.androidApplication
@@ -22,7 +20,7 @@ import org.koin.dsl.module.applicationContext
 
 val bitfolioModule: Module = applicationContext {
     viewModel { AccountViewModel(get()) }
-    bean { BalanceRepository(get(), get(), get(), get(), get(), get()) }
+    bean { BalanceRepository(get(), get(), get(), get(), get(), get(), get()) }
 
     bean { AppExecutors.instance }
     bean { BtcBalanceCalculator() }
