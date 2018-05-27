@@ -48,7 +48,6 @@ class BalanceRepository(
                 .subscribe()
     }
 
-
     private fun getBalancesFromBittrex(): Single<List<Balance>> {
         return bittrexApiClient.getBalances()
                 .flatMap {
@@ -82,10 +81,13 @@ class BalanceRepository(
             balances: List<Balance>,
             marketSummaries: List<MarketSummary>
     ): List<BalanceInBtc> {
-        val bitcoinBalance = balances.filter {
-            it.currency == "BTC"
-        }.map { BalanceInBtc(it.currency, it.balance.roundTo8()) }.first()
+        // For BTC we do not have to calculate the balance
+        val bitcoinBalance = balances
+                .filter { it.currency == "BTC" }
+                .map { BalanceInBtc(it.currency, it.balance.roundTo8()) }
+                .first()
 
+        // For all other balances, multiply them with their current market price in BTC
         val allBalancesInBtc = btcBalanceCalculator
                 .calculateBalancesInBtc(
                         balances,
@@ -99,9 +101,11 @@ class BalanceRepository(
             bittrexBalances: List<Balance>,
             binanceBalances: List<Balance>
     ): List<Balance> {
+        // Add all balances from Bittrex
         val balances = mutableListOf<Balance>()
         balances.addAll(bittrexBalances)
 
+        // Add Binance balances to existing Bittrex balances
         for (balance in binanceBalances) {
             balances.find { it.currency == balance.currency }?.let {
                 it.balance += balance.balance
