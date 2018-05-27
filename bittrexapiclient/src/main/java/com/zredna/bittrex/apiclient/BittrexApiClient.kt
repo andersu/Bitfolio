@@ -21,23 +21,8 @@ class BittrexApiClient private constructor(
         return bittrexAccountApi.getBalances(API_KEY, nonce.toString())
     }
 
-    fun getMarketSummaries(onSuccess: (GetMarketSummariesResponseDto) -> Unit,
-                           onFailure: () -> Unit) {
-        bittrexPublicApi.getMarketSummaries().enqueue(object: Callback<GetMarketSummariesResponseDto> {
-            override fun onFailure(call: Call<GetMarketSummariesResponseDto>, t: Throwable) {
-                onFailure()
-            }
-
-            override fun onResponse(call: Call<GetMarketSummariesResponseDto>,
-                                    response: Response<GetMarketSummariesResponseDto>) {
-                val responseBody = response.body()
-                if (response.isSuccessful && responseBody != null) {
-                    onSuccess(responseBody)
-                } else {
-                    onFailure()
-                }
-            }
-        })
+    fun getMarketSummaries(): Single<GetMarketSummariesResponseDto> {
+        return bittrexPublicApi.getMarketSummaries()
     }
 
     class Builder() {
