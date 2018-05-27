@@ -20,7 +20,6 @@ import org.koin.android.ext.koin.androidApplication
 import org.koin.dsl.module.Module
 import org.koin.dsl.module.applicationContext
 
-// Koin module
 val bitfolioModule: Module = applicationContext {
     viewModel { AccountViewModel(get()) }
     bean { BalanceRepository(get(), get(), get(), get(), get(), get()) }
@@ -28,7 +27,6 @@ val bitfolioModule: Module = applicationContext {
     bean { AppExecutors.instance }
     bean { BtcBalanceCalculator() }
 
-    // Room Database instance
     bean {
         Room.databaseBuilder(
                 androidApplication(),
@@ -36,7 +34,7 @@ val bitfolioModule: Module = applicationContext {
                 "bitfolio.db"
         ).build()
     }
-    // BalanceDAO
+
     bean { get<BitfolioDatabase>().balanceDao() }
 
     bean {

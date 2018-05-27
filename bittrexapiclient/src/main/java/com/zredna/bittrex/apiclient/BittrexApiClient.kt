@@ -2,6 +2,8 @@ package com.zredna.bittrex.apiclient
 
 import com.zredna.bittrex.apiclient.dto.GetBalancesResponseDto
 import com.zredna.bittrex.apiclient.dto.GetMarketSummariesResponseDto
+import io.reactivex.Single
+import io.reactivex.schedulers.Schedulers
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -14,24 +16,9 @@ class BittrexApiClient private constructor(
         private val bittrexPublicApi: BittrexPublicApi
 ) {
 
-    fun getBalances(onSuccess: (GetBalancesResponseDto) -> Unit,
-                    onFailure: () -> Unit) {
+    fun getBalances(): Single<GetBalancesResponseDto> {
         val nonce = Date().time
-        bittrexAccountApi.getBalances(API_KEY, nonce.toString()).enqueue(object: Callback<GetBalancesResponseDto> {
-            override fun onFailure(call: Call<GetBalancesResponseDto>, t: Throwable) {
-                onFailure()
-            }
-
-            override fun onResponse(call: Call<GetBalancesResponseDto>,
-                                    response: Response<GetBalancesResponseDto>) {
-                val responseBody = response.body()
-                if (response.isSuccessful && responseBody != null) {
-                    onSuccess(responseBody)
-                } else {
-                    onFailure()
-                }
-            }
-        })
+        return bittrexAccountApi.getBalances(API_KEY, nonce.toString())
     }
 
     fun getMarketSummaries(onSuccess: (GetMarketSummariesResponseDto) -> Unit,

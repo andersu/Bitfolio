@@ -2,6 +2,7 @@ package com.zredna.bitfolio.account.repository
 
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
+import android.util.Log
 import com.zredna.bitfolio.account.AppExecutors
 import com.zredna.bitfolio.account.Balance
 import com.zredna.bitfolio.account.BalanceInBtc
@@ -11,6 +12,9 @@ import com.zredna.bitfolio.account.converter.BittrexMarketSummaryDtoConverter
 import com.zredna.bitfolio.account.db.BalanceDao
 import com.zredna.bitfolio.account.roundTo8
 import com.zredna.bittrex.apiclient.BittrexApiClient
+import io.reactivex.Single
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 
 class BalanceRepository(
         private val appExecutors: AppExecutors,
@@ -60,20 +64,19 @@ class BalanceRepository(
     }
 
     private fun fetchFromNetwork() {
-        bittrexApiClient.getBalances(
-                onSuccess = {
+        bittrexApiClient.getBalances()
+                .subscribeOn(Schedulers.io())
+                .doOnSuccess {
                     val newBalances = bittrexBalanceDtoConverter
                             .convertToModels(it.result)
                             .filter { it.balance > 0 }
-                    appExecutors.diskIO().execute {
-                        balanceDao.insertBalances(newBalances)
-                        calculateBalancesInBtc(newBalances)
-                    }
-                },
-                onFailure = {
-                    // TODO
+                    balanceDao.insertBalances(newBalances)
+                    calculateBalancesInBtc(newBalances)
                 }
-        )
+                .doOnError {
+                    Log.d("BalanceRepository", "onError")
+                }
+                .subscribe()
     }
 
     /*private fun getBittrexBalances(onSuccess: (List<BalanceInBtc>) -> Unit, onFailure: () -> Unit) {
