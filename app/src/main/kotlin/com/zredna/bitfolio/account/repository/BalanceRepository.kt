@@ -1,7 +1,6 @@
 package com.zredna.bitfolio.account.repository
 
 import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.MutableLiveData
 import com.zredna.binanceapiclient.BinanceApiClient
 import com.zredna.bitfolio.account.Balance
 import com.zredna.bitfolio.account.BalanceInBtc
@@ -48,6 +47,7 @@ class BalanceRepository(
                 }
                 .subscribe()
     }
+
 
     private fun getBalancesFromBittrex(): Single<List<Balance>> {
         return bittrexApiClient.getBalances()
