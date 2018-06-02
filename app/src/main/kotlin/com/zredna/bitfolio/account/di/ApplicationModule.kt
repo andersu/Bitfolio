@@ -3,7 +3,7 @@ package com.zredna.bitfolio.account.di
 import android.arch.persistence.room.Room
 import com.zredna.binanceapiclient.BinanceApiClient
 import com.zredna.bitfolio.BuildConfig.DEBUG
-import com.zredna.bitfolio.account.AccountViewModel
+import com.zredna.bitfolio.account.view.account.AccountViewModel
 import com.zredna.bitfolio.account.AppExecutors
 import com.zredna.bitfolio.account.BtcBalanceCalculator
 import com.zredna.bitfolio.account.converter.BinanceBalanceDtoConverter
