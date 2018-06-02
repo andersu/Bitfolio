@@ -5,14 +5,17 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
-        android:name=".account.BitfolioApplication"
         android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:name=".BitfolioApplication"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".account.view.account.AccountActivity">
+        <activity android:name=".view.account.AccountActivity">
+
+        </activity>
+        <activity android:name=".view.addexchange.AddExchangeActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

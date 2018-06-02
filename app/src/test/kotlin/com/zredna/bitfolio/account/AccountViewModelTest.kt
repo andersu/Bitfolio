@@ -2,9 +2,10 @@ package com.zredna.bitfolio.account
 
 import android.arch.core.executor.testing.InstantTaskExecutorRule
 import android.arch.lifecycle.MutableLiveData
+import com.zredna.bitfolio.BalanceInBtc
 import com.zredna.bitfolio.BaseTest
-import com.zredna.bitfolio.account.repository.BalanceRepository
-import com.zredna.bitfolio.account.view.account.AccountViewModel
+import com.zredna.bitfolio.repository.BalanceRepository
+import com.zredna.bitfolio.view.account.AccountViewModel
 import junit.framework.Assert.assertEquals
 import org.junit.Before
 import org.junit.Rule
