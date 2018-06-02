@@ -1,4 +1,4 @@
-package com.zredna.bitfolio.view.addexchange
+package com.zredna.bitfolio
 
 enum class Exchange {
     BITTREX,

@@ -9,16 +9,13 @@ import retrofit2.Callback
 import retrofit2.Response
 import java.util.*
 
-private const val API_KEY = "d89007c1259747ecb8ec3f7dca70a976"
-
 class BittrexApiClient private constructor(
         private val bittrexAccountApi: BittrexAccountApi,
         private val bittrexPublicApi: BittrexPublicApi
 ) {
-
     fun getBalances(): Single<GetBalancesResponseDto> {
         val nonce = Date().time
-        return bittrexAccountApi.getBalances(API_KEY, nonce.toString())
+        return bittrexAccountApi.getBalances(nonce.toString())
     }
 
     fun getMarketSummaries(): Single<GetMarketSummariesResponseDto> {
@@ -36,7 +33,8 @@ class BittrexApiClient private constructor(
             return this
         }
 
-        fun build(): BittrexApiClient {
+        fun build(credentialsProvider: CredentialsProvider): BittrexApiClient {
+            bittrexAccountApiProvider.setCredentialsProvider(credentialsProvider)
             return BittrexApiClient(
                     bittrexAccountApiProvider.provideBittrexAccountApi(),
                     bittrexPublicApiProvider.provideBittrexPublicApi()

@@ -1,12 +1,17 @@
 package com.zredna.bitfolio.view.account
 
+import android.app.Activity
 import android.arch.lifecycle.Observer
+import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
+import android.view.Menu
 import com.zredna.bitfolio.R
 import com.zredna.bitfolio.BalanceInBtc
 import com.zredna.bitfolio.BalancesAdapter
+import com.zredna.bitfolio.view.addexchange.AddExchangeActivity
+import com.zredna.bitfolio.view.addexchange.REQUEST_CODE_ADD_EXCHANGE
 import kotlinx.android.synthetic.main.activity_account.*
 import org.koin.android.architecture.ext.viewModel
 
@@ -36,6 +41,27 @@ class AccountActivity : AppCompatActivity() {
 
         viewModel.totalBalance.observe(this, totalBalanceObserver)
         viewModel.isRefreshing().observe(this, refreshingObserver)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.menu_account, menu)
+        menu.findItem(R.id.action_add_exchange).setOnMenuItemClickListener {
+            startActivityForResult(
+                    Intent(this, AddExchangeActivity::class.java),
+                    REQUEST_CODE_ADD_EXCHANGE
+            )
+
+            true
+        }
+
+        return true
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == REQUEST_CODE_ADD_EXCHANGE && resultCode == Activity.RESULT_OK) {
+            viewModel.refresh()
+        }
     }
     // endregion
 

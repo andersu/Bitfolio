@@ -8,7 +8,6 @@ import retrofit2.http.Query
 internal interface BittrexAccountApi {
     @GET("getbalances")
     fun getBalances(
-            @Query("apikey") apiKey: String,
             @Query("nonce") nonce: String
     ): Single<GetBalancesResponseDto>
 }

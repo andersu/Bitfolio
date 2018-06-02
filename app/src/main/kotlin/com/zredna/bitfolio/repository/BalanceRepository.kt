@@ -5,6 +5,7 @@ import com.zredna.binanceapiclient.BinanceApiClient
 import com.zredna.bitfolio.Balance
 import com.zredna.bitfolio.BalanceInBtc
 import com.zredna.bitfolio.BtcBalanceCalculator
+import com.zredna.bitfolio.Exchange
 import com.zredna.bitfolio.MarketSummary
 import com.zredna.bitfolio.converter.BinanceBalanceDtoConverter
 import com.zredna.bitfolio.converter.BittrexBalanceDtoConverter
@@ -23,7 +24,8 @@ class BalanceRepository(
         private val binanceApiClient: BinanceApiClient,
         private val binanceBalanceDtoConverter: BinanceBalanceDtoConverter,
         private val balanceDao: BalanceDao,
-        private val btcBalanceCalculator: BtcBalanceCalculator
+        private val btcBalanceCalculator: BtcBalanceCalculator,
+        private val exchangeCredentialsRepository: ExchangeCredentialsRepository
 ) {
     private val balancesInBtc = balanceDao.getBalances()
 
@@ -33,8 +35,15 @@ class BalanceRepository(
     }
 
     private fun fetchFromNetwork() {
+        val getBalancesFromBittrex =
+                if (!exchangeCredentialsRepository.containsCredentialsForExchange(Exchange.BITTREX)) {
+                    Single.just(emptyList())
+                } else {
+                    getBalancesFromBittrex()
+                }
+
         Single.zip(
-                getBalancesFromBittrex(),
+                getBalancesFromBittrex,
                 getBalancesFromBinance(),
                 getMarketSummariesFromBittrex(),
                 Function3<List<Balance>, List<Balance>, List<MarketSummary>, List<BalanceInBtc>> { bittrexBalances, binanceBalances, marketSummaries ->

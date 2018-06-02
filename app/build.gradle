@@ -15,6 +15,9 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
+        debug {
+            debuggable true
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
@@ -62,6 +65,8 @@ dependencies {
     compile project(path: ':binanceapiclient')
     compile project(path: ':bittrexapiclient')
     implementation 'com.android.support:design:27.1.1'
+
+    debugImplementation 'com.amitshekhar.android:debug-db:1.0.3'
 }
 
 task copyTestClasses(type: Copy) {
