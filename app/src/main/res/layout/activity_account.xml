@@ -6,37 +6,17 @@
     android:orientation="vertical"
     tools:context="com.zredna.bitfolio.view.account.AccountActivity">
 
-    <LinearLayout
+    <com.zredna.bitfolio.view.custom.SlidingTabLayout
+        android:id="@+id/tabLayout"
         android:layout_width="match_parent"
+        android:background="@color/primary"
         android:layout_height="wrap_content"
-        android:padding="8dp"
-        android:background="@android:color/white"
-        android:orientation="vertical"
-        android:gravity="right">
-        <TextView
+        android:elevation="4dp"/>
 
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Total balance:" />
-        <TextView
-            android:id="@+id/textViewTotalBalance"
-            android:textStyle="bold"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@android:color/black"
-            android:textSize="40sp"
-            tools:text="₿ 1.00" />
-    </LinearLayout>
-
-    <android.support.v4.widget.SwipeRefreshLayout
-        android:id="@+id/swipeRefreshLayout"
+    <android.support.v4.view.ViewPager
+        android:id="@+id/viewPager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/recyclerViewBalances"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-
-    </android.support.v4.widget.SwipeRefreshLayout>
+        android:layout_height="match_parent"
+        android:layout_below="@id/tabLayout" />
 
 </LinearLayout>

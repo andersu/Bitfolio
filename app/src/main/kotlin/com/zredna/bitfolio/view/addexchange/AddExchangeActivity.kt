@@ -5,6 +5,7 @@ import android.arch.lifecycle.Observer
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.text.method.LinkMovementMethod
+import android.view.MenuItem
 import android.view.View
 import com.zredna.bitfolio.R
 import com.zredna.bitfolio.TextChangedListener
@@ -28,7 +29,19 @@ class AddExchangeActivity : AppCompatActivity() {
         bindViewModel()
     }
 
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == android.R.id.home) {
+            finish()
+            return true
+        }
+
+        return super.onOptionsItemSelected(item)
+    }
+
     private fun initView() {
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        title = getString(R.string.add_exchange_title)
+
         bittrexButton.setOnClickListener { viewModel.exchangeSelected(Exchange.BITTREX) }
         binanceButton.setOnClickListener { viewModel.exchangeSelected(Exchange.BINANCE) }
 
