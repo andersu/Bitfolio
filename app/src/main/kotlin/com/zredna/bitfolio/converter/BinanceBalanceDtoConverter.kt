@@ -1,7 +1,7 @@
 package com.zredna.bitfolio.converter
 
 import com.zredna.binanceapiclient.dto.BalanceDto
-import com.zredna.bitfolio.Balance
+import com.zredna.bitfolio.model.Balance
 
 class BinanceBalanceDtoConverter: DtoConverter<BalanceDto, Balance>() {
     override fun convertToDto(model: Balance): BalanceDto {

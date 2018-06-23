@@ -2,10 +2,10 @@ package com.zredna.bitfolio.account
 
 import android.arch.core.executor.testing.InstantTaskExecutorRule
 import android.arch.lifecycle.MutableLiveData
-import com.zredna.bitfolio.BalanceInBtc
+import com.zredna.bitfolio.db.datamodel.BalanceInBtc
 import com.zredna.bitfolio.BaseTest
 import com.zredna.bitfolio.repository.BalanceRepository
-import com.zredna.bitfolio.view.account.AccountViewModel
+import com.zredna.bitfolio.view.account.balances.BalancesViewModel
 import junit.framework.Assert.assertEquals
 import org.junit.Before
 import org.junit.Rule
@@ -15,9 +15,9 @@ import org.mockito.Mock
 import org.mockito.Mockito.times
 import org.mockito.Mockito.verify
 
-class AccountViewModelTest: BaseTest() {
+class BalancesViewModelTest: BaseTest() {
 
-    private lateinit var accountViewModel: AccountViewModel
+    private lateinit var balancesViewModel: BalancesViewModel
 
     @Mock
     private lateinit var balanceRepository: BalanceRepository
@@ -32,7 +32,7 @@ class AccountViewModelTest: BaseTest() {
 
     @Before
     fun setUp() {
-        accountViewModel = AccountViewModel(balanceRepository)
+        balancesViewModel = BalancesViewModel(balanceRepository)
     }
 
     @Test
@@ -41,11 +41,11 @@ class AccountViewModelTest: BaseTest() {
         val balances = emptyList<BalanceInBtc>()
         given(balanceRepository.loadBalances()).willReturn(balancesLiveData)
 
-        accountViewModel = AccountViewModel(balanceRepository)
+        balancesViewModel = BalancesViewModel(balanceRepository)
         balancesLiveData.value = balances
 
-        accountViewModel.balances.observeForever { assertEquals(it, balances) }
-        accountViewModel.totalBalance.observeForever { assertEquals(0.0, it) }
+        balancesViewModel.balances.observeForever { assertEquals(it, balances) }
+        balancesViewModel.totalBalance.observeForever { assertEquals(0.0, it) }
     }
 
     @Test
@@ -57,30 +57,30 @@ class AccountViewModelTest: BaseTest() {
         )
         given(balanceRepository.loadBalances()).willReturn(balancesLiveData)
 
-        accountViewModel = AccountViewModel(balanceRepository)
+        balancesViewModel = BalancesViewModel(balanceRepository)
         balancesLiveData.value = balances
 
-        accountViewModel.balances.observeForever { assertEquals(it, balances) }
-        accountViewModel.totalBalance.observeForever { assertEquals(0.30, it) }
+        balancesViewModel.balances.observeForever { assertEquals(it, balances) }
+        balancesViewModel.totalBalance.observeForever { assertEquals(0.30, it) }
     }
 
     @Test
     fun balancesUpdatedStopsRefreshing() {
-        accountViewModel.balancesUpdated()
+        balancesViewModel.balancesUpdated()
 
-        accountViewModel.isRefreshing().observeForever { assertEquals(it, false) }
+        balancesViewModel.isRefreshing().observeForever { assertEquals(it, false) }
     }
 
     @Test
     fun refreshStartsRefreshing() {
-        accountViewModel.refresh()
+        balancesViewModel.refresh()
 
-        accountViewModel.isRefreshing().observeForever { assertEquals(it, true) }
+        balancesViewModel.isRefreshing().observeForever { assertEquals(it, true) }
     }
 
     @Test
     fun refreshLoadsNewBalances() {
-        accountViewModel.refresh()
+        balancesViewModel.refresh()
 
         // Once when initializing the viewmodel and again when refreshing
         verify(balanceRepository, times(2)).loadBalances()

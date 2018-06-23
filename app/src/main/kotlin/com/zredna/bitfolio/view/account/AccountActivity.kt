@@ -3,8 +3,9 @@ package com.zredna.bitfolio.view.account
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import android.view.Menu
 import com.zredna.bitfolio.R
+import com.zredna.bitfolio.view.account.balances.BalancesFragment
+import com.zredna.bitfolio.view.account.exchanges.ExchangesFragment
 import com.zredna.bitfolio.view.addexchange.AddExchangeActivity
 import com.zredna.bitfolio.view.addexchange.REQUEST_CODE_ADD_EXCHANGE
 import kotlinx.android.synthetic.main.activity_account.*

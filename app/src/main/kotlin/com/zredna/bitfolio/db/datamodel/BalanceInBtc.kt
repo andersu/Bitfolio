@@ -1,4 +1,4 @@
-package com.zredna.bitfolio
+package com.zredna.bitfolio.db.datamodel
 
 import android.arch.persistence.room.Entity
 import android.arch.persistence.room.PrimaryKey

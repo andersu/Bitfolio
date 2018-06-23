@@ -5,7 +5,7 @@ import android.arch.persistence.room.Dao
 import android.arch.persistence.room.Insert
 import android.arch.persistence.room.OnConflictStrategy
 import android.arch.persistence.room.Query
-import com.zredna.bitfolio.BalanceInBtc
+import com.zredna.bitfolio.db.datamodel.BalanceInBtc
 
 @Dao
 interface BalanceDao {

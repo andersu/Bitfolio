@@ -2,10 +2,10 @@ package com.zredna.bitfolio.repository
 
 import android.arch.lifecycle.LiveData
 import com.zredna.binanceapiclient.BinanceApiClient
-import com.zredna.bitfolio.Balance
-import com.zredna.bitfolio.BalanceInBtc
+import com.zredna.bitfolio.model.Balance
+import com.zredna.bitfolio.db.datamodel.BalanceInBtc
 import com.zredna.bitfolio.BtcBalanceCalculator
-import com.zredna.bitfolio.Exchange
+import com.zredna.bitfolio.ExchangeName
 import com.zredna.bitfolio.MarketSummary
 import com.zredna.bitfolio.converter.BinanceBalanceDtoConverter
 import com.zredna.bitfolio.converter.BittrexBalanceDtoConverter
@@ -25,7 +25,7 @@ class BalanceRepository(
         private val binanceBalanceDtoConverter: BinanceBalanceDtoConverter,
         private val balanceDao: BalanceDao,
         private val btcBalanceCalculator: BtcBalanceCalculator,
-        private val exchangeCredentialsRepository: ExchangeCredentialsRepository
+        private val exchangeRepository: ExchangeRepository
 ) {
     private val balancesInBtc = balanceDao.getBalances()
 
@@ -36,7 +36,7 @@ class BalanceRepository(
 
     private fun fetchFromNetwork() {
         val getBalancesFromBittrex =
-                if (!exchangeCredentialsRepository.containsCredentialsForExchange(Exchange.BITTREX)) {
+                if (!exchangeRepository.containsCredentialsForExchange(ExchangeName.BITTREX.name)) {
                     Single.just(emptyList())
                 } else {
                     getBalancesFromBittrex()

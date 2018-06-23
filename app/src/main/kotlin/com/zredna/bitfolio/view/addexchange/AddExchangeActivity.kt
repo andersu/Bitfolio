@@ -9,7 +9,7 @@ import android.view.MenuItem
 import android.view.View
 import com.zredna.bitfolio.R
 import com.zredna.bitfolio.TextChangedListener
-import com.zredna.bitfolio.Exchange
+import com.zredna.bitfolio.ExchangeName
 import com.zredna.bitfolio.view.extensions.showKeyboard
 import kotlinx.android.synthetic.main.activity_add_exchange.*
 import org.koin.android.architecture.ext.viewModel
@@ -19,7 +19,7 @@ const val REQUEST_CODE_ADD_EXCHANGE = 7891
 class AddExchangeActivity : AppCompatActivity() {
     private val viewModel by viewModel<AddExchangeViewModel>()
 
-    private val selectedExchange: Exchange? = null
+    private val selectedExchangeName: ExchangeName? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,8 +42,8 @@ class AddExchangeActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         title = getString(R.string.add_exchange_title)
 
-        bittrexButton.setOnClickListener { viewModel.exchangeSelected(Exchange.BITTREX) }
-        binanceButton.setOnClickListener { viewModel.exchangeSelected(Exchange.BINANCE) }
+        bittrexButton.setOnClickListener { viewModel.exchangeSelected(ExchangeName.BITTREX) }
+        binanceButton.setOnClickListener { viewModel.exchangeSelected(ExchangeName.BINANCE) }
 
         apiKeyInput.addTextChangedListener(object : TextChangedListener() {
             override fun onTextChanged(text: CharSequence, start: Int, before: Int, count: Int) {
@@ -73,12 +73,12 @@ class AddExchangeActivity : AppCompatActivity() {
         viewModel.isAddExchangeEnabled().observe(this, addExchangeEnabledObserver)
     }
 
-    private val selectedExchangeObserver = Observer<Exchange> {
-        bittrexButton.isSelected = it == Exchange.BITTREX
-        binanceButton.isSelected = it == Exchange.BINANCE
+    private val selectedExchangeObserver = Observer<ExchangeName> {
+        bittrexButton.isSelected = it == ExchangeName.BITTREX
+        binanceButton.isSelected = it == ExchangeName.BINANCE
 
         apiExplanationText.text =
-                if (it == Exchange.BITTREX)
+                if (it == ExchangeName.BITTREX)
                     getString(R.string.add_exchange_bittrex_explanation)
                 else
                     getString(R.string.add_exchange_binance_explanation)

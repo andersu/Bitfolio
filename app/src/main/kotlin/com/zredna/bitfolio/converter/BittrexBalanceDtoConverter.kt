@@ -1,6 +1,6 @@
 package com.zredna.bitfolio.converter
 
-import com.zredna.bitfolio.Balance
+import com.zredna.bitfolio.model.Balance
 import com.zredna.bittrex.apiclient.dto.BalanceDto
 
 class BittrexBalanceDtoConverter : DtoConverter<BalanceDto, Balance>() {

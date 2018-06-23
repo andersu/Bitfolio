@@ -3,14 +3,15 @@ package com.zredna.bitfolio.view.addexchange
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
-import com.zredna.bitfolio.Exchange
-import com.zredna.bitfolio.ExchangeCredentials
-import com.zredna.bitfolio.repository.ExchangeCredentialsRepository
+import com.zredna.bitfolio.ExchangeName
+import com.zredna.bitfolio.db.datamodel.Exchange
+import com.zredna.bitfolio.model.ExchangeCredentials
+import com.zredna.bitfolio.repository.ExchangeRepository
 
 class AddExchangeViewModel(
-        private val exchangeCredentialsRepository: ExchangeCredentialsRepository
+        private val exchangeRepository: ExchangeRepository
 ): ViewModel() {
-    private val selectedExchange = MutableLiveData<Exchange>()
+    private val selectedExchange = MutableLiveData<ExchangeName>()
     private val isAddExchangeEnabled = MutableLiveData<Boolean>()
 
     private var apiKey = ""
@@ -20,7 +21,7 @@ class AddExchangeViewModel(
         isAddExchangeEnabled.value = false
     }
 
-    fun getSelectedExchange(): LiveData<Exchange> {
+    fun getSelectedExchange(): LiveData<ExchangeName> {
         return selectedExchange
     }
 
@@ -28,8 +29,8 @@ class AddExchangeViewModel(
         return isAddExchangeEnabled
     }
 
-    fun exchangeSelected(exchange: Exchange) {
-        selectedExchange.value = exchange
+    fun exchangeSelected(exchangeName: ExchangeName) {
+        selectedExchange.value = exchangeName
     }
 
     fun apiKeyTextChanged(text: String) {
@@ -46,9 +47,7 @@ class AddExchangeViewModel(
         isAddExchangeEnabled.value = apiKey.isNotEmpty() && secret.isNotEmpty()
     }
 
-    fun addExchange(exchange: Exchange, apiKey: String, secret: String) {
-        exchangeCredentialsRepository.saveExchangeCredentials(
-                ExchangeCredentials(exchange, apiKey, secret)
-        )
+    fun addExchange(exchangeName: ExchangeName, apiKey: String, secret: String) {
+        exchangeRepository.saveExchange(ExchangeCredentials(exchangeName.name, apiKey, secret))
     }
 }

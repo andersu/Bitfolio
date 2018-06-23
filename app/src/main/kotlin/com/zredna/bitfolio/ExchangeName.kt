@@ -1,6 +1,6 @@
 package com.zredna.bitfolio
 
-enum class Exchange {
+enum class ExchangeName {
     BITTREX,
     BINANCE
 }

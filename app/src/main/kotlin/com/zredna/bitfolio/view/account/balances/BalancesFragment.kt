@@ -1,4 +1,4 @@
-package com.zredna.bitfolio.view.account
+package com.zredna.bitfolio.view.account.balances
 
 import android.app.Activity
 import android.arch.lifecycle.Observer
@@ -9,15 +9,14 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.zredna.bitfolio.BalanceInBtc
-import com.zredna.bitfolio.BalancesAdapter
+import com.zredna.bitfolio.db.datamodel.BalanceInBtc
 import com.zredna.bitfolio.R
 import com.zredna.bitfolio.view.addexchange.REQUEST_CODE_ADD_EXCHANGE
 import kotlinx.android.synthetic.main.fragment_balances.*
 import org.koin.android.architecture.ext.viewModel
 
 class BalancesFragment: Fragment() {
-    private val viewModel by viewModel<AccountViewModel>()
+    private val viewModel by viewModel<BalancesViewModel>()
 
     private val balancesAdapter = BalancesAdapter()
 

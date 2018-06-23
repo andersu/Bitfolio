@@ -1,5 +1,8 @@
 package com.zredna.bitfolio
 
+import com.zredna.bitfolio.db.datamodel.BalanceInBtc
+import com.zredna.bitfolio.model.Balance
+
 class BtcBalanceCalculator {
 
     fun calculateBalancesInBtc(

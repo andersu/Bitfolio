@@ -1,9 +1,11 @@
-package com.zredna.bitfolio
+package com.zredna.bitfolio.view.account.balances
 
 import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.LinearLayout
+import com.zredna.bitfolio.R
+import com.zredna.bitfolio.db.datamodel.BalanceInBtc
 import kotlinx.android.synthetic.main.item_view_balance.view.*
 
 class BalanceItemView @JvmOverloads constructor(
