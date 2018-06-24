@@ -19,8 +19,6 @@ const val REQUEST_CODE_ADD_EXCHANGE = 7891
 class AddExchangeActivity : AppCompatActivity() {
     private val viewModel by viewModel<AddExchangeViewModel>()
 
-    private val selectedExchangeName: ExchangeName? = null
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_exchange)

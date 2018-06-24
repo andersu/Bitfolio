@@ -35,16 +35,24 @@ class BalanceRepository(
     }
 
     private fun fetchFromNetwork() {
-        val getBalancesFromBittrex =
-                if (!exchangeRepository.containsCredentialsForExchange(ExchangeName.BITTREX.name)) {
-                    Single.just(emptyList())
-                } else {
+        val balancesFromBittrex =
+                if (exchangeRepository.containsCredentialsForExchange(ExchangeName.BITTREX.name)) {
                     getBalancesFromBittrex()
+                } else {
+                    Single.just(emptyList())
                 }
 
+        val balancesFromBinance =
+                if (exchangeRepository.containsCredentialsForExchange(ExchangeName.BINANCE.name)) {
+                    getBalancesFromBinance()
+                } else {
+                    Single.just(emptyList())
+                }
+
+
         Single.zip(
-                getBalancesFromBittrex,
-                getBalancesFromBinance(),
+                balancesFromBittrex,
+                balancesFromBinance,
                 getMarketSummariesFromBittrex(),
                 Function3<List<Balance>, List<Balance>, List<MarketSummary>, List<BalanceInBtc>> { bittrexBalances, binanceBalances, marketSummaries ->
                     val balances = mergeBalances(bittrexBalances, binanceBalances)

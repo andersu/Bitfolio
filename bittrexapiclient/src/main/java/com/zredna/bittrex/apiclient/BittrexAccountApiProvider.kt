@@ -11,7 +11,7 @@ private const val BASE_URL = "https://bittrex.com/api/v1.1/account/"
 internal class BittrexAccountApiProvider {
     private val httpClientBuilder = OkHttpClient.Builder()
 
-    private lateinit var credentialsProvider: CredentialsProvider
+    private lateinit var bittrexCredentialsProvider: BittrexCredentialsProvider
 
     fun provideBittrexAccountApi(): BittrexAccountApi {
         val httpClient = initClient()
@@ -33,8 +33,8 @@ internal class BittrexAccountApiProvider {
         return this
     }
 
-    fun setCredentialsProvider(credentialsProvider: CredentialsProvider) {
-        this.credentialsProvider = credentialsProvider
+    fun setCredentialsProvider(bittrexCredentialsProvider: BittrexCredentialsProvider) {
+        this.bittrexCredentialsProvider = bittrexCredentialsProvider
     }
 
     private fun initClient(): OkHttpClient {
@@ -42,7 +42,7 @@ internal class BittrexAccountApiProvider {
             val original = chain.request()
             val requestBuilder = original.newBuilder()
 
-            val credentials = credentialsProvider.getCredentials()
+            val credentials = bittrexCredentialsProvider.getCredentials()
             val url = chain.request()
                     .url()
                     .newBuilder()

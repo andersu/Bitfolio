@@ -45,7 +45,8 @@ class BinanceApiClient private constructor(
             return this
         }
 
-        fun build(): BinanceApiClient {
+        fun build(binanceCredentialsProvider: BinanceCredentialsProvider): BinanceApiClient {
+            binanceAccountApiProvider.setCredentialsProvider(binanceCredentialsProvider)
             return BinanceApiClient(
                     binanceAccountApiProvider.provideBinanceApi(),
                     binancePublicApiProvider.provideBinancePublicApi()

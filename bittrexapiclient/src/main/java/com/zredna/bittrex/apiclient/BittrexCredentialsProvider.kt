@@ -1,5 +1,5 @@
 package com.zredna.bittrex.apiclient
 
-interface CredentialsProvider {
+interface BittrexCredentialsProvider {
     fun getCredentials(): BittrexCredentials
 }

@@ -8,11 +8,11 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.util.*
 
 private const val BASE_URL = "https://api.binance.com/"
-private const val API_KEY = ""
-private const val SECRET = ""
 
 class BinanceAccountApiProvider {
     private val httpClientBuilder = OkHttpClient.Builder()
+
+    private lateinit var binanceCredentialsProvider: BinanceCredentialsProvider
 
     internal fun provideBinanceApi(): BinanceAccountApi {
         val httpClient = initClient()
@@ -34,10 +34,16 @@ class BinanceAccountApiProvider {
         return this
     }
 
+    fun setCredentialsProvider(binanceCredentialsProvider: BinanceCredentialsProvider) {
+        this.binanceCredentialsProvider = binanceCredentialsProvider
+    }
+
     private fun initClient(): OkHttpClient {
         httpClientBuilder.addInterceptor { chain ->
             val originalRequest = chain.request()
             val originalHttpUrl = originalRequest.url()
+
+            val credentials = binanceCredentialsProvider.getCredentials()
 
             val intermediateUrl = originalHttpUrl.newBuilder()
                     .addQueryParameter("timestamp", "${Date().time}")
@@ -48,7 +54,7 @@ class BinanceAccountApiProvider {
             originalRequest.body()?.let {
                 totalParams += it.toString()
             }
-            val signature = HashUtil.hmacSha256(totalParams, SECRET)
+            val signature = HashUtil.hmacSha256(totalParams, credentials.secret)
 
             val url = intermediateUrl.newBuilder()
                     .addQueryParameter("signature", signature)
@@ -56,7 +62,7 @@ class BinanceAccountApiProvider {
 
             val requestBuilder = originalRequest.newBuilder().url(url)
 
-            requestBuilder.addHeader("X-MBX-APIKEY", API_KEY)
+            requestBuilder.addHeader("X-MBX-APIKEY", credentials.apiKey)
 
             val request = requestBuilder.build()
             chain.proceed(request)
