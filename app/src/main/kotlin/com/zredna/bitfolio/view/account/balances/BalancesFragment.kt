@@ -59,7 +59,7 @@ class BalancesFragment: Fragment() {
     // region Observers
     private val balanceListObserver = Observer<List<BalanceInBtc>> {
         it?.let {
-            balancesAdapter.balances = it
+            balancesAdapter.balances = it.filter { it.balanceInBtc > 0.0001 }
             viewModel.balancesUpdated()
         }
     }
