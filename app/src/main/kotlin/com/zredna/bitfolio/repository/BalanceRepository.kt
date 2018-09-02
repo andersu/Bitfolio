@@ -102,7 +102,7 @@ class BalanceRepository(
         val bitcoinBalance = balances
                 .filter { it.currency == "BTC" }
                 .map { BalanceInBtc(it.currency, it.balance.roundTo8()) }
-                .first()
+                .firstOrNull()
 
         // For all other balances, multiply them with their current market price in BTC
         val allBalancesInBtc = btcBalanceCalculator
@@ -110,7 +110,11 @@ class BalanceRepository(
                         balances,
                         marketSummaries
                 ).toMutableList()
-        allBalancesInBtc.add(bitcoinBalance)
+
+        bitcoinBalance?.let {
+            allBalancesInBtc.add(bitcoinBalance)
+        }
+
         return allBalancesInBtc.sortedByDescending { it.balanceInBtc }
     }
 
