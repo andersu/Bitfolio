@@ -31,12 +31,12 @@ android {
 }
 
 dependencies {
-    val support_version = "27.1.1"
+    val supportVersion = "27.1.1"
 
     implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
-    implementation("com.android.support:appcompat-v7:$support_version")
-    implementation("com.android.support:recyclerview-v7:$support_version")
-    implementation("com.android.support:design:$support_version")
+    implementation("com.android.support:appcompat-v7:$supportVersion")
+    implementation("com.android.support:recyclerview-v7:$supportVersion")
+    implementation("com.android.support:design:$supportVersion")
     implementation("com.android.support.constraint:constraint-layout:1.1.0")
     implementation(kotlin("stdlib-jdk7", KotlinCompilerVersion.VERSION))
 
@@ -44,13 +44,13 @@ dependencies {
     implementation("org.koin:koin-android-architecture:0.9.2")
 
     // ViewModel and LiveData
-    val lifecycle_version = "1.1.1"
-    implementation("android.arch.lifecycle:extensions:$lifecycle_version")
+    val lifecycleVersion = "1.1.1"
+    implementation("android.arch.lifecycle:extensions:$lifecycleVersion")
 
     // Room
-    val room_version = "1.1.0"
-    implementation("android.arch.persistence.room:runtime:$room_version")
-    kapt("android.arch.persistence.room:compiler:$room_version")
+    val roomVersion = "1.1.0"
+    implementation("android.arch.persistence.room:runtime:$roomVersion")
+    kapt("android.arch.persistence.room:compiler:$roomVersion")
 
     // RxJava
     implementation("io.reactivex.rxjava2:rxjava:2.1.14")
