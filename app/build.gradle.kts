@@ -28,6 +28,12 @@ android {
             proguardFiles(getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro")
         }
     }
+
+    // This should be default, so not sure why I have to do this
+    sourceSets {
+        getByName("main").java.srcDirs("src/main/kotlin")
+        getByName("test").java.srcDirs("src/test/kotlin")
+    }
 }
 
 dependencies {
@@ -37,7 +43,7 @@ dependencies {
     implementation("com.android.support:appcompat-v7:$supportVersion")
     implementation("com.android.support:recyclerview-v7:$supportVersion")
     implementation("com.android.support:design:$supportVersion")
-    implementation("com.android.support.constraint:constraint-layout:1.1.0")
+    implementation("com.android.support.constraint:constraint-layout:1.1.3")
     implementation(kotlin("stdlib-jdk7", KotlinCompilerVersion.VERSION))
 
     // Koin for Android Architecture Components
@@ -63,7 +69,6 @@ dependencies {
 
     compile(project(":binanceapiclient"))
     compile(project(":bittrexapiclient"))
-
 }
 
 tasks.register("copyTestClasses", Copy::class.java) {

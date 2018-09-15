@@ -10,8 +10,12 @@ class ExchangesViewModel(
         private val exchangeRepository: ExchangeRepository
 ) : ViewModel() {
 
-    var exchangeCredentials: LiveData<List<ExchangeCredentials>> = Transformations.map(exchangeRepository.loadExchanges()) {
-        it.map { exchangeRepository.getCredentialsForExchange(it.name) }
-    }
+    var exchangeCredentials: LiveData<List<ExchangeCredentials>> =
+            Transformations.map(exchangeRepository.loadExchanges()) { exchanges ->
+                exchanges.map {
+                    exchangeRepository.getCredentialsForExchange(it.name)
+                }
+            }
+
     var exchanges = exchangeRepository.loadExchanges()
 }

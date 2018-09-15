@@ -14,8 +14,8 @@ class BalancesViewModel(
     private val isRefreshing = MutableLiveData<Boolean>()
 
     var balances = balanceRepository.loadBalances()
-    var totalBalance: LiveData<Double> = Transformations.map(balances) {
-        it.sumByDouble { it.balanceInBtc }.roundTo8()
+    var totalBalance: LiveData<Double> = Transformations.map(balances) { balancesInBtc ->
+        balancesInBtc.sumByDouble { it.balanceInBtc }.roundTo8()
     }
 
     fun isRefreshing(): LiveData<Boolean> = isRefreshing

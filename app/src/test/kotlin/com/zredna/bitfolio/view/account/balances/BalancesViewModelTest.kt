@@ -1,9 +1,10 @@
-package com.zredna.bitfolio.account
+package com.zredna.bitfolio.view.account.balances
 
 import android.arch.core.executor.testing.InstantTaskExecutorRule
 import android.arch.lifecycle.MutableLiveData
 import com.zredna.bitfolio.db.datamodel.BalanceInBtc
 import com.zredna.bitfolio.BaseTest
+import com.zredna.bitfolio.BaseViewModelTest
 import com.zredna.bitfolio.repository.BalanceRepository
 import com.zredna.bitfolio.view.account.balances.BalancesViewModel
 import junit.framework.Assert.assertEquals
@@ -15,20 +16,12 @@ import org.mockito.Mock
 import org.mockito.Mockito.times
 import org.mockito.Mockito.verify
 
-class BalancesViewModelTest: BaseTest() {
+class BalancesViewModelTest: BaseViewModelTest() {
 
     private lateinit var balancesViewModel: BalancesViewModel
 
     @Mock
     private lateinit var balanceRepository: BalanceRepository
-
-    /*
-     * This is required to test LiveData.
-     * When setting values Android checks to see what thread the call is made from,
-     * and this rule returns the required result to avoid an NPE
-     */
-    @get: Rule
-    var instantTaskExecutorRule = InstantTaskExecutorRule()
 
     @Before
     fun setUp() {
