@@ -11,6 +11,8 @@ import android.view.View
 import android.view.ViewGroup
 import com.zredna.bitfolio.db.datamodel.BalanceInBtc
 import com.zredna.bitfolio.R
+import com.zredna.bitfolio.repository.Resource
+import com.zredna.bitfolio.repository.Status
 import com.zredna.bitfolio.view.addexchange.REQUEST_CODE_ADD_EXCHANGE
 import kotlinx.android.synthetic.main.fragment_balances.*
 import org.koin.android.architecture.ext.viewModel
@@ -50,17 +52,23 @@ class BalancesFragment: Fragment() {
     }
 
     private fun bindViewModel() {
-        viewModel.balances.observe(this, balanceListObserver)
+        viewModel.balances.observe(this, balancesResourceObserver)
 
         viewModel.totalBalance.observe(this, totalBalanceObserver)
         viewModel.isRefreshing().observe(this, refreshingObserver)
     }
 
     // region Observers
-    private val balanceListObserver = Observer<List<BalanceInBtc>> {
-        it?.let {
-            balancesAdapter.balances = it.filter { it.balanceInBtc > 0.0001 }
-            viewModel.balancesUpdated()
+    private val balancesResourceObserver = Observer<Resource<List<BalanceInBtc>>> {
+        when (it?.status) {
+            Status.LOADING -> { }
+            Status.SUCCESS -> {
+                balancesAdapter.balances = it.data?.filter {
+                    balanceInBtc -> balanceInBtc.balanceInBtc > 0.0001
+                } ?: emptyList()
+                viewModel.balancesUpdated()
+            }
+            Status.ERROR -> { }
         }
     }
 

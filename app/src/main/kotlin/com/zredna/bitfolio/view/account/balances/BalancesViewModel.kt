@@ -4,7 +4,9 @@ import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.Transformations
 import android.arch.lifecycle.ViewModel
+import com.zredna.bitfolio.db.datamodel.BalanceInBtc
 import com.zredna.bitfolio.repository.BalanceRepository
+import com.zredna.bitfolio.repository.Resource
 import com.zredna.bitfolio.roundTo8
 
 class BalancesViewModel(
@@ -13,9 +15,10 @@ class BalancesViewModel(
 
     private val isRefreshing = MutableLiveData<Boolean>()
 
-    var balances = balanceRepository.loadBalances()
-    var totalBalance: LiveData<Double> = Transformations.map(balances) { balancesInBtc ->
-        balancesInBtc.sumByDouble { it.balanceInBtc }.roundTo8()
+    var balances: LiveData<Resource<List<BalanceInBtc>>> = balanceRepository.loadBalances()
+
+    var totalBalance: LiveData<Double> = Transformations.map(balances) { resource ->
+        resource.data?.sumByDouble { it.balanceInBtc }?.roundTo8() ?: 0.0
     }
 
     fun isRefreshing(): LiveData<Boolean> = isRefreshing

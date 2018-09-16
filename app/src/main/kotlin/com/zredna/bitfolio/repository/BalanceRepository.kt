@@ -1,6 +1,7 @@
 package com.zredna.bitfolio.repository
 
 import android.arch.lifecycle.LiveData
+import android.arch.lifecycle.MediatorLiveData
 import com.zredna.binanceapiclient.BinanceApiClient
 import com.zredna.bitfolio.model.Balance
 import com.zredna.bitfolio.db.datamodel.BalanceInBtc
@@ -8,13 +9,14 @@ import com.zredna.bitfolio.BtcBalanceCalculator
 import com.zredna.bitfolio.ExchangeName
 import com.zredna.bitfolio.MarketSummary
 import com.zredna.bitfolio.converter.BinanceBalanceDtoConverter
+import com.zredna.bitfolio.converter.BinanceMarketSummaryDtoConverter
 import com.zredna.bitfolio.converter.BittrexBalanceDtoConverter
 import com.zredna.bitfolio.converter.BittrexMarketSummaryDtoConverter
 import com.zredna.bitfolio.db.BalanceDao
 import com.zredna.bitfolio.roundTo8
 import com.zredna.bittrex.apiclient.BittrexApiClient
 import io.reactivex.Single
-import io.reactivex.functions.Function3
+import io.reactivex.functions.Function4
 import io.reactivex.schedulers.Schedulers
 
 class BalanceRepository(
@@ -23,15 +25,28 @@ class BalanceRepository(
         private val bittrexMarketSummaryDtoConverter: BittrexMarketSummaryDtoConverter,
         private val binanceApiClient: BinanceApiClient,
         private val binanceBalanceDtoConverter: BinanceBalanceDtoConverter,
+        private val binanceMarketSummaryDtoConverter: BinanceMarketSummaryDtoConverter,
         private val balanceDao: BalanceDao,
         private val btcBalanceCalculator: BtcBalanceCalculator,
         private val exchangeRepository: ExchangeRepository
 ) {
     private val balancesInBtc = balanceDao.getBalances()
+    private val balancesInBtcResource = MediatorLiveData<Resource<List<BalanceInBtc>>>()
 
-    fun loadBalances(): LiveData<List<BalanceInBtc>> {
+    init {
+        // When the balancesInBtc livedata is updated, balancesInBtcResource will be updated as well
+        balancesInBtcResource.addSource(balancesInBtc) {
+            balancesInBtcResource.value = Resource.success(it)
+        }
+    }
+
+    fun loadBalances(): LiveData<Resource<List<BalanceInBtc>>> {
+        // Start fetching new balances from the network
         fetchFromNetwork()
-        return balancesInBtc
+
+        // While fetching return the livedata
+        // with the balances we already have in the local database
+        return balancesInBtcResource
     }
 
     private fun fetchFromNetwork() {
@@ -49,18 +64,24 @@ class BalanceRepository(
                     Single.just(emptyList())
                 }
 
-
         Single.zip(
                 balancesFromBittrex,
                 balancesFromBinance,
                 getMarketSummariesFromBittrex(),
-                Function3<List<Balance>, List<Balance>, List<MarketSummary>, List<BalanceInBtc>> { bittrexBalances, binanceBalances, marketSummaries ->
-                    val balances = mergeBalances(bittrexBalances, binanceBalances)
-                    calculateBalancesInBtc(balances, marketSummaries)
+                getMarketSummariesFromBinance(),
+                Function4<List<Balance>, List<Balance>, List<MarketSummary>, List<MarketSummary>, List<BalanceInBtc>> { bittrexBalances, binanceBalances, bittrexMarketSummaries, binanceMarketSummaries ->
+                    val bittrexBalancesInBtc = calculateBalancesInBtc(bittrexBalances, bittrexMarketSummaries)
+                    val binanceBalanceInBtc = calculateBalancesInBtc(binanceBalances, binanceMarketSummaries)
+                    mergeBalancesInBtc(bittrexBalancesInBtc, binanceBalanceInBtc)
                 })
                 .subscribeOn(Schedulers.io())
                 .doOnSuccess { balancesInBtc ->
+                    // Inserting in the database will trigger an update on the livedata
                     balanceDao.insertBalances(balancesInBtc)
+                }
+                .onErrorResumeNext {
+                    print(it)
+                    Single.just(emptyList())
                 }
                 .subscribe()
     }
@@ -68,10 +89,17 @@ class BalanceRepository(
     private fun getBalancesFromBittrex(): Single<List<Balance>> {
         return bittrexApiClient.getBalances()
                 .flatMap {
-                    val bittrexBalances = bittrexBalanceDtoConverter
-                            .convertToModels(it.result)
-                            .filter { it.balance > 0 }
-                    Single.just(bittrexBalances)
+                    if (it.success) {
+                        it.result?.let { balanceDtos ->
+                            val bittrexBalances = bittrexBalanceDtoConverter
+                                    .convertToModels(balanceDtos)
+                                    .filter { balance -> balance.balance > 0 }
+                            Single.just(bittrexBalances)
+                        }
+                    } else {
+                        // TODO: Proper error
+                        error(it.message ?: "")
+                    }
                 }
     }
 
@@ -80,7 +108,7 @@ class BalanceRepository(
                 .flatMap {
                     val binanceBalances = binanceBalanceDtoConverter
                             .convertToModels(it.balances)
-                            .filter { it.balance > 0 }
+                            .filter { balance -> balance.balance > 0 }
                     Single.just(binanceBalances)
                 }
     }
@@ -90,6 +118,15 @@ class BalanceRepository(
                 .flatMap { getMarketSummariesResponseDto ->
                     val marketSummaries = bittrexMarketSummaryDtoConverter
                             .convertToModels(getMarketSummariesResponseDto.result)
+                    Single.just(marketSummaries)
+                }
+    }
+
+    private fun getMarketSummariesFromBinance(): Single<List<MarketSummary>> {
+        return binanceApiClient.getMarketSummaries()
+                .flatMap {
+                    val marketSummaries = binanceMarketSummaryDtoConverter
+                            .convertToModels(it)
                     Single.just(marketSummaries)
                 }
     }
@@ -118,21 +155,25 @@ class BalanceRepository(
         return allBalancesInBtc.sortedByDescending { it.balanceInBtc }
     }
 
-    private fun mergeBalances(
-            bittrexBalances: List<Balance>,
-            binanceBalances: List<Balance>
-    ): List<Balance> {
+    // Takes two lists of balances in btc and merges the contents
+    // If both lists contain elements of the same currency the resulting list will
+    // show the sum for that currency.
+    private fun mergeBalancesInBtc(
+            bittrexBalancesInBtc: List<BalanceInBtc>,
+            binanceBalancesInBtc: List<BalanceInBtc>
+    ): List<BalanceInBtc> {
         // Add all balances from Bittrex
-        val balances = mutableListOf<Balance>()
-        balances.addAll(bittrexBalances)
+        val balancesInBtc = mutableListOf<BalanceInBtc>()
+        balancesInBtc.addAll(bittrexBalancesInBtc)
 
-        // Add Binance balances to existing Bittrex balances
-        for (balance in binanceBalances) {
-            balances.find { it.currency == balance.currency }?.let {
-                it.balance += balance.balance
-            } ?: balances.add(balance)
+        // For currencies in both lists, add to existing Bittrex balances.
+        // For new currencies, add them to the list.
+        for (balance in binanceBalancesInBtc) {
+            balancesInBtc.find { it.currency == balance.currency }?.let {
+                it.balanceInBtc += balance.balanceInBtc
+            } ?: balancesInBtc.add(balance)
         }
 
-        return balances
+        return balancesInBtc
     }
 }

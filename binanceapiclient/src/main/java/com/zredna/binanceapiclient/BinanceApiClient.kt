@@ -16,23 +16,8 @@ class BinanceApiClient private constructor(
         return binanceAccountApi.getAccountInformation()
     }
 
-    fun getAllPrices(onSuccess: (List<MarketSummaryDto>) -> Unit,
-                     onFailure: () -> Unit) {
-        binancePublicApi.getAllPrices().enqueue(object : Callback<List<MarketSummaryDto>> {
-            override fun onFailure(call: Call<List<MarketSummaryDto>>, t: Throwable) {
-                onFailure()
-            }
-
-            override fun onResponse(
-                    call: Call<List<MarketSummaryDto>>,
-                    response: Response<List<MarketSummaryDto>>
-            ) {
-                response.body()?.let {
-                    onSuccess(it)
-                }
-            }
-
-        })
+    fun getMarketSummaries(): Single<List<MarketSummaryDto>> {
+        return binancePublicApi.getAllPrices()
     }
 
     class Builder {

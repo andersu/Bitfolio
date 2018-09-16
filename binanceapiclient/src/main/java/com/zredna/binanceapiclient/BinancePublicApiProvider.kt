@@ -3,6 +3,7 @@ package com.zredna.binanceapiclient
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 
 private const val BASE_URL = "https://api.binance.com/"
@@ -17,6 +18,7 @@ internal class BinancePublicApiProvider {
                 .baseUrl(BASE_URL)
                 .client(httpClient)
                 .addConverterFactory(GsonConverterFactory.create())
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .build()
                 .create(BinancePublicApi::class.java)
     }

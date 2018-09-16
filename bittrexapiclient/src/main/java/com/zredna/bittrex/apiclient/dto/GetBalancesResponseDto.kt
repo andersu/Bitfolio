@@ -1,5 +1,7 @@
 package com.zredna.bittrex.apiclient.dto
 
 data class GetBalancesResponseDto(
-        var result: List<BalanceDto>
+        var success: Boolean,
+        var message: String?,
+        var result: List<BalanceDto>?
 )

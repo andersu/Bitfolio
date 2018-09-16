@@ -32,7 +32,7 @@ val bitfolioModule: Module = applicationContext {
     viewModel { AddExchangeViewModel(get()) }
 
     bean { androidApplication().getSharedPreferences("bitfolio", Context.MODE_PRIVATE) }
-    bean { BalanceRepository(get(), get(), get(), get(), get(), get(), get(), get()) }
+    bean { BalanceRepository(get(), get(), get(), get(), get(), get(), get(), get(), get()) }
     bean { ExchangeRepository(get(), get()) }
 
     bean { BtcBalanceCalculator() }
