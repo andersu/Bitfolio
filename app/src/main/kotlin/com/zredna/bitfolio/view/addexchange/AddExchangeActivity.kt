@@ -1,18 +1,17 @@
 package com.zredna.bitfolio.view.addexchange
 
-import android.app.Activity
-import android.arch.lifecycle.Observer
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
 import android.text.method.LinkMovementMethod
 import android.view.MenuItem
 import android.view.View
+import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
+import com.zredna.bitfolio.ExchangeName
 import com.zredna.bitfolio.R
 import com.zredna.bitfolio.TextChangedListener
-import com.zredna.bitfolio.ExchangeName
 import com.zredna.bitfolio.view.extensions.showKeyboard
 import kotlinx.android.synthetic.main.activity_add_exchange.*
-import org.koin.android.architecture.ext.viewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 const val REQUEST_CODE_ADD_EXCHANGE = 7891
 
@@ -60,7 +59,7 @@ class AddExchangeActivity : AppCompatActivity() {
             val secret = secretInput.text.toString()
             viewModel.getSelectedExchange().value?.let {
                 viewModel.addExchange(it, apiKey, secret)
-                setResult(Activity.RESULT_OK)
+                setResult(AppCompatActivity.RESULT_OK)
                 finish()
             }
         }

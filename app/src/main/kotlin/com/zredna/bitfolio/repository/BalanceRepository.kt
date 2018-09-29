@@ -1,7 +1,7 @@
 package com.zredna.bitfolio.repository
 
-import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.MediatorLiveData
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
 import com.zredna.binanceapiclient.BinanceApiClient
 import com.zredna.bitfolio.model.Balance
 import com.zredna.bitfolio.db.datamodel.BalanceInBtc

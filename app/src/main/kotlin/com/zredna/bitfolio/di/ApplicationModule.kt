@@ -1,6 +1,6 @@
 package com.zredna.bitfolio.di
 
-import android.arch.persistence.room.Room
+import androidx.room.Room
 import android.content.Context
 import com.zredna.binanceapiclient.BinanceApiClient
 import com.zredna.binanceapiclient.BinanceCredentials
@@ -21,8 +21,8 @@ import com.zredna.bitfolio.view.addexchange.AddExchangeViewModel
 import com.zredna.bittrex.apiclient.BittrexApiClient
 import com.zredna.bittrex.apiclient.BittrexCredentials
 import com.zredna.bittrex.apiclient.BittrexCredentialsProvider
-import org.koin.android.architecture.ext.viewModel
 import org.koin.android.ext.koin.androidApplication
+import org.koin.androidx.viewmodel.ext.koin.viewModel
 import org.koin.dsl.module.Module
 import org.koin.dsl.module.applicationContext
 
@@ -31,13 +31,13 @@ val bitfolioModule: Module = applicationContext {
     viewModel { ExchangesViewModel(get()) }
     viewModel { AddExchangeViewModel(get()) }
 
-    bean { androidApplication().getSharedPreferences("bitfolio", Context.MODE_PRIVATE) }
-    bean { BalanceRepository(get(), get(), get(), get(), get(), get(), get(), get(), get()) }
-    bean { ExchangeRepository(get(), get()) }
+    single { androidApplication().getSharedPreferences("bitfolio", Context.MODE_PRIVATE) }
+    single { BalanceRepository(get(), get(), get(), get(), get(), get(), get(), get(), get()) }
+    single { ExchangeRepository(get(), get()) }
 
-    bean { BtcBalanceCalculator() }
+    single { BtcBalanceCalculator() }
 
-    bean {
+    single {
         Room.databaseBuilder(
                 androidApplication(),
                 BitfolioDatabase::class.java,
@@ -45,10 +45,10 @@ val bitfolioModule: Module = applicationContext {
         ).build()
     }
 
-    bean { get<BitfolioDatabase>().balanceDao() }
-    bean { get<BitfolioDatabase>().exchangeDao() }
+    single { get<BitfolioDatabase>().balanceDao() }
+    single { get<BitfolioDatabase>().exchangeDao() }
 
-    bean {
+    single {
         val exchangeCredentialsRepository = get<ExchangeRepository>()
 
         val builder = BittrexApiClient.Builder()
@@ -63,10 +63,10 @@ val bitfolioModule: Module = applicationContext {
             }
         })
     }
-    bean { BittrexBalanceDtoConverter() }
-    bean { BittrexMarketSummaryDtoConverter() }
+    single { BittrexBalanceDtoConverter() }
+    single { BittrexMarketSummaryDtoConverter() }
 
-    bean {
+    single {
         val exchangeCredentialsRepository = get<ExchangeRepository>()
         val builder = BinanceApiClient.Builder()
         if (DEBUG) {
@@ -80,6 +80,6 @@ val bitfolioModule: Module = applicationContext {
             }
         })
     }
-    bean { BinanceBalanceDtoConverter() }
-    bean { BinanceMarketSummaryDtoConverter() }
+    single { BinanceBalanceDtoConverter() }
+    single { BinanceMarketSummaryDtoConverter() }
 }

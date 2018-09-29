@@ -2,8 +2,8 @@ package com.zredna.bitfolio.view.account
 
 import android.content.Intent
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
 import com.zredna.bitfolio.R
+import androidx.appcompat.app.AppCompatActivity
 import com.zredna.bitfolio.view.account.balances.BalancesFragment
 import com.zredna.bitfolio.view.account.exchanges.ExchangesFragment
 import com.zredna.bitfolio.view.addexchange.AddExchangeActivity

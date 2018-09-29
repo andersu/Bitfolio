@@ -1,7 +1,7 @@
 package com.zredna.bitfolio.view.account.balances
 
-import android.support.v7.widget.RecyclerView
 import android.view.ViewGroup
+import androidx.recyclerview.widget.RecyclerView
 import com.zredna.bitfolio.db.datamodel.BalanceInBtc
 
 class BalancesAdapter: RecyclerView.Adapter<BalancesAdapter.BalanceViewHolder>() {

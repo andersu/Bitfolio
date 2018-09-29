@@ -1,6 +1,6 @@
 package com.zredna.bitfolio.repository
 
-import android.arch.lifecycle.LiveData
+import androidx.lifecycle.LiveData
 import android.content.SharedPreferences
 import com.zredna.bitfolio.db.ExchangeDao
 import com.zredna.bitfolio.db.datamodel.Exchange

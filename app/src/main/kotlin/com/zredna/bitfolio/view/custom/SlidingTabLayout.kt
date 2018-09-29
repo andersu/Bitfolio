@@ -3,7 +3,6 @@ package com.zredna.bitfolio.view.custom
 import android.content.Context
 import android.graphics.Color
 import android.graphics.Typeface
-import android.support.v4.view.ViewPager
 import android.util.AttributeSet
 import android.util.TypedValue
 import android.view.Gravity
@@ -14,6 +13,7 @@ import android.widget.FrameLayout
 import android.widget.HorizontalScrollView
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.viewpager.widget.ViewPager
 import com.zredna.bitfolio.view.custom.SlidingTabLayout.TabColorizer
 
 /**

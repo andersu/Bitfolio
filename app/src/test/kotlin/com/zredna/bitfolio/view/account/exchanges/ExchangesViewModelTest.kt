@@ -1,6 +1,6 @@
 package com.zredna.bitfolio.view.account.exchanges
 
-import android.arch.lifecycle.MutableLiveData
+import androidx.lifecycle.MutableLiveData
 import com.zredna.bitfolio.BaseViewModelTest
 import com.zredna.bitfolio.db.datamodel.Exchange
 import com.zredna.bitfolio.model.ExchangeCredentials

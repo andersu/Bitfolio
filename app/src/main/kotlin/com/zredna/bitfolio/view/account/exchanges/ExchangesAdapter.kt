@@ -1,7 +1,7 @@
 package com.zredna.bitfolio.view.account.exchanges
 
-import android.support.v7.widget.RecyclerView
 import android.view.ViewGroup
+import androidx.recyclerview.widget.RecyclerView
 import com.zredna.bitfolio.model.ExchangeCredentials
 
 class ExchangesAdapter: RecyclerView.Adapter<ExchangesAdapter.ExchangeViewHolder>() {

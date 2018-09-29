@@ -1,21 +1,21 @@
 package com.zredna.bitfolio.view.account.balances
 
-import android.app.Activity
-import android.arch.lifecycle.Observer
+import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
 import android.content.Intent
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.zredna.bitfolio.db.datamodel.BalanceInBtc
 import com.zredna.bitfolio.R
 import com.zredna.bitfolio.repository.Resource
 import com.zredna.bitfolio.repository.Status
 import com.zredna.bitfolio.view.addexchange.REQUEST_CODE_ADD_EXCHANGE
 import kotlinx.android.synthetic.main.fragment_balances.*
-import org.koin.android.architecture.ext.viewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class BalancesFragment: Fragment() {
     private val viewModel by viewModel<BalancesViewModel>()
@@ -39,7 +39,7 @@ class BalancesFragment: Fragment() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == REQUEST_CODE_ADD_EXCHANGE && resultCode == Activity.RESULT_OK) {
+        if (requestCode == REQUEST_CODE_ADD_EXCHANGE && resultCode == AppCompatActivity.RESULT_OK) {
             viewModel.refresh()
         }
     }

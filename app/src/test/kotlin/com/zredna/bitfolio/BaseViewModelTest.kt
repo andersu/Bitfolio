@@ -1,6 +1,6 @@
 package com.zredna.bitfolio
 
-import android.arch.core.executor.testing.InstantTaskExecutorRule
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import org.junit.Rule
 
 open class BaseViewModelTest: BaseTest() {

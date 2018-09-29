@@ -1,10 +1,9 @@
 package com.zredna.bitfolio.view.addexchange
 
-import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.MutableLiveData
-import android.arch.lifecycle.ViewModel
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import com.zredna.bitfolio.ExchangeName
-import com.zredna.bitfolio.db.datamodel.Exchange
 import com.zredna.bitfolio.model.ExchangeCredentials
 import com.zredna.bitfolio.repository.ExchangeRepository
 
