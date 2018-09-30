@@ -1,10 +1,10 @@
 package com.zredna.bitfolio.view.account.balances
 
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.MutableLiveData
-import com.zredna.bitfolio.db.datamodel.BalanceInBtc
 import com.zredna.bitfolio.BaseViewModelTest
+import com.zredna.bitfolio.db.datamodel.BalanceInBtc
 import com.zredna.bitfolio.repository.BalanceRepository
+import com.zredna.bitfolio.repository.Resource
 import junit.framework.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
@@ -13,7 +13,7 @@ import org.mockito.Mock
 import org.mockito.Mockito.times
 import org.mockito.Mockito.verify
 
-class BalancesViewModelTest: BaseViewModelTest() {
+class BalancesViewModelTest : BaseViewModelTest() {
 
     private lateinit var balancesViewModel: BalancesViewModel
 
@@ -27,8 +27,8 @@ class BalancesViewModelTest: BaseViewModelTest() {
 
     @Test
     fun getBalancesEmptyList() {
-        val balancesLiveData = MutableLiveData<List<BalanceInBtc>>()
-        val balances = emptyList<BalanceInBtc>()
+        val balancesLiveData = MutableLiveData<Resource<List<BalanceInBtc>>>()
+        val balances = Resource.success((emptyList<BalanceInBtc>()))
         given(balanceRepository.loadBalances()).willReturn(balancesLiveData)
 
         balancesViewModel = BalancesViewModel(balanceRepository)
@@ -40,10 +40,11 @@ class BalancesViewModelTest: BaseViewModelTest() {
 
     @Test
     fun getBalancesNonEmptyList() {
-        val balancesLiveData = MutableLiveData<List<BalanceInBtc>>()
-        val balances = listOf(
-                BalanceInBtc("currency1", 0.10),
-                BalanceInBtc("currency2", 0.20)
+        val balancesLiveData = MutableLiveData<Resource<List<BalanceInBtc>>>()
+        val balances = Resource.success(
+                listOf(BalanceInBtc("currency1", 0.10),
+                        BalanceInBtc("currency2", 0.20)
+                )
         )
         given(balanceRepository.loadBalances()).willReturn(balancesLiveData)
 
