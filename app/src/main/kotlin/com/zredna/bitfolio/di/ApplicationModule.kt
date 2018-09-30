@@ -15,6 +15,8 @@ import com.zredna.bitfolio.converter.BittrexMarketSummaryDtoConverter
 import com.zredna.bitfolio.db.BitfolioDatabase
 import com.zredna.bitfolio.repository.BalanceRepository
 import com.zredna.bitfolio.repository.ExchangeRepository
+import com.zredna.bitfolio.service.BinanceService
+import com.zredna.bitfolio.service.BittrexService
 import com.zredna.bitfolio.view.account.balances.BalancesViewModel
 import com.zredna.bitfolio.view.account.exchanges.ExchangesViewModel
 import com.zredna.bitfolio.view.addexchange.AddExchangeViewModel
@@ -32,7 +34,7 @@ val bitfolioModule: Module = applicationContext {
     viewModel { AddExchangeViewModel(get()) }
 
     single { androidApplication().getSharedPreferences("bitfolio", Context.MODE_PRIVATE) }
-    single { BalanceRepository(get(), get(), get(), get(), get(), get(), get(), get(), get()) }
+    single { BalanceRepository(get(), get(), get(), get(), get()) }
     single { ExchangeRepository(get(), get()) }
 
     single { BtcBalanceCalculator() }
@@ -63,6 +65,7 @@ val bitfolioModule: Module = applicationContext {
             }
         })
     }
+    single { BittrexService(get(), get(), get()) }
     single { BittrexBalanceDtoConverter() }
     single { BittrexMarketSummaryDtoConverter() }
 
@@ -80,6 +83,8 @@ val bitfolioModule: Module = applicationContext {
             }
         })
     }
+
+    single { BinanceService(get(), get(), get()) }
     single { BinanceBalanceDtoConverter() }
     single { BinanceMarketSummaryDtoConverter() }
 }

@@ -1,7 +1,7 @@
 package com.zredna.bitfolio.view.account.exchanges
 
 import androidx.lifecycle.MutableLiveData
-import com.zredna.bitfolio.BaseViewModelTest
+import com.zredna.bitfolio.BaseLiveDataTest
 import com.zredna.bitfolio.db.datamodel.Exchange
 import com.zredna.bitfolio.model.ExchangeCredentials
 import com.zredna.bitfolio.repository.ExchangeRepository
@@ -12,7 +12,7 @@ import org.mockito.BDDMockito.given
 import org.mockito.Mock
 import org.mockito.Mockito.mock
 
-class ExchangesViewModelTest: BaseViewModelTest() {
+class ExchangesViewModelTest: BaseLiveDataTest() {
 
     private lateinit var exchangesViewModel: ExchangesViewModel
 

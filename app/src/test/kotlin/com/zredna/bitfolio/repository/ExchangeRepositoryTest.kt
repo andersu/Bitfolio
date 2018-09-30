@@ -1,22 +1,20 @@
 package com.zredna.bitfolio.repository
 
 import android.content.SharedPreferences
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.MutableLiveData
-import com.zredna.bitfolio.BaseTest
+import com.zredna.bitfolio.BaseLiveDataTest
 import com.zredna.bitfolio.db.ExchangeDao
 import com.zredna.bitfolio.db.datamodel.Exchange
 import com.zredna.bitfolio.model.ExchangeCredentials
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
-import org.junit.Rule
 import org.junit.Test
 import org.mockito.BDDMockito.given
 import org.mockito.Mock
 import org.mockito.Mockito.verify
 
-class ExchangeRepositoryTest: BaseTest() {
+class ExchangeRepositoryTest: BaseLiveDataTest() {
     private lateinit var exchangeRepository: ExchangeRepository
 
     @Mock
@@ -27,14 +25,6 @@ class ExchangeRepositoryTest: BaseTest() {
     private lateinit var sharedPreferencesEditor: SharedPreferences.Editor
     @Mock
     private lateinit var exchangeCredentials: ExchangeCredentials
-
-    /*
-     * This is required to test LiveData.
-     * When setting values Android checks to see what thread the call is made from,
-     * and this rule returns the required result to avoid an NPE
-     */
-    @get: Rule
-    var instantTaskExecutorRule = InstantTaskExecutorRule()
 
     @Test
     fun saveExchangeInsertsExchangeUsingDao() {

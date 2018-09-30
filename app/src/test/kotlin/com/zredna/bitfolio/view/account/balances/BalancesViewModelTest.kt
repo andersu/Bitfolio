@@ -1,7 +1,7 @@
 package com.zredna.bitfolio.view.account.balances
 
 import androidx.lifecycle.MutableLiveData
-import com.zredna.bitfolio.BaseViewModelTest
+import com.zredna.bitfolio.BaseLiveDataTest
 import com.zredna.bitfolio.db.datamodel.BalanceInBtc
 import com.zredna.bitfolio.repository.BalanceRepository
 import com.zredna.bitfolio.repository.Resource
@@ -13,7 +13,7 @@ import org.mockito.Mock
 import org.mockito.Mockito.times
 import org.mockito.Mockito.verify
 
-class BalancesViewModelTest : BaseViewModelTest() {
+class BalancesViewModelTest : BaseLiveDataTest() {
 
     private lateinit var balancesViewModel: BalancesViewModel
 

@@ -3,7 +3,7 @@ package com.zredna.bitfolio
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import org.junit.Rule
 
-open class BaseViewModelTest: BaseTest() {
+open class BaseLiveDataTest: BaseTest() {
     /*
      * This is required to test LiveData.
      * When setting values Android checks to see what thread the call is made from,
