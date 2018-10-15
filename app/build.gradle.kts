@@ -1,4 +1,4 @@
-import org.jetbrains.kotlin.config.KotlinCompilerVersion
+import com.zredna.bitfolio.Config
 
 plugins {
     id("com.android.application")
@@ -8,15 +8,15 @@ plugins {
 }
 
 android {
-    compileSdkVersion(28)
-    buildToolsVersion = "28.0.2"
+    compileSdkVersion(Config.Android.compileSdkVersion)
+    buildToolsVersion = Config.Android.buildToolsVersion
 
     defaultConfig {
-        applicationId = "com.zredna.bitfolio"
-        minSdkVersion(19)
-        targetSdkVersion(28)
-        versionCode = 1
-        versionName = "1.0"
+        applicationId = Config.Android.applicationId
+        minSdkVersion(Config.Android.minSdkVersion)
+        targetSdkVersion(Config.Android.targetSdkVersion)
+        versionCode = Config.Android.versionCode
+        versionName = Config.Android.versionName
         testInstrumentationRunner = "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -28,48 +28,38 @@ android {
             proguardFiles(getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro")
         }
     }
-
-    // This should be default, so not sure why I have to do this
-    sourceSets {
-        getByName("main").java.srcDirs("src/main/kotlin")
-        getByName("test").java.srcDirs("src/test/kotlin")
-    }
 }
 
 dependencies {
-    val supportVersion = "28.0.0"
+    implementation(Config.Libs.kotlinStdlib)
 
-    implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
-    implementation("com.android.support:appcompat-v7:$supportVersion")
-    implementation("androidx.recyclerview:recyclerview:1.0.0")
-    implementation("com.android.support:design:$supportVersion")
-    implementation("com.android.support.constraint:constraint-layout:1.1.3")
-    implementation(kotlin("stdlib-jdk7", KotlinCompilerVersion.VERSION))
+    // Support
+    implementation(Config.Libs.appcompat)
+    implementation(Config.Libs.recyclerview)
+    implementation(Config.Libs.design)
+    implementation(Config.Libs.constraintLayout)
 
     // Koin
-    val koinVersion = "1.0.1"
-    implementation("org.koin:koin-androidx-viewmodel:$koinVersion")
+    implementation(Config.Libs.koin)
 
     // ViewModel and LiveData
-    val lifecycleVersion = "2.0.0-beta01"
-    implementation("androidx.lifecycle:lifecycle-extensions:$lifecycleVersion")
+    implementation(Config.Libs.lifecycleExtensions)
 
     // Room
-    val roomVersion = "2.0.0-beta01"
-    implementation("androidx.room:room-runtime:$roomVersion")
-    kapt("androidx.room:room-compiler:$roomVersion")
+    implementation(Config.Libs.room)
+    kapt(Config.Libs.roomCompiler)
 
     // RxJava
-    implementation("io.reactivex.rxjava2:rxjava:2.1.14")
-    implementation("io.reactivex.rxjava2:rxandroid:2.0.2")
+    implementation(Config.Libs.rxjava)
+    implementation(Config.Libs.rxandroid)
 
     // Testing
-    testImplementation("junit:junit:4.12")
-    testImplementation("org.mockito:mockito-core:2.19.0")
-    testImplementation("androidx.arch.core:core-testing:$lifecycleVersion")
+    testImplementation(Config.TestLibs.junit)
+    testImplementation(Config.TestLibs.mockito)
+    testImplementation(Config.TestLibs.archCoreTesting)
 
-    compile(project(":binanceapiclient"))
-    compile(project(":bittrexapiclient"))
+    implementation(project(":bittrexapiclient"))
+    implementation(project(":binanceapiclient"))
 }
 
 tasks.register("copyTestClasses", Copy::class) {

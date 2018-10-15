@@ -1,22 +1,20 @@
-import org.jetbrains.kotlin.config.KotlinCompilerVersion
+import com.zredna.bitfolio.Config
 
 plugins {
     id("kotlin")
 }
 
 dependencies {
-    implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
-    implementation(kotlin("stdlib-jdk7", KotlinCompilerVersion.VERSION))
+    implementation(Config.Libs.kotlinStdlib)
 
     // RxJava
-    implementation("io.reactivex.rxjava2:rxjava:2.1.14")
+    implementation(Config.Libs.rxjava)
 
     // Retrofit
-    val retrofitVersion = "2.4.0"
-    implementation("com.squareup.retrofit2:retrofit:$retrofitVersion")
-    implementation("com.squareup.retrofit2:converter-gson:$retrofitVersion")
-    implementation("com.squareup.retrofit2:adapter-rxjava2:$retrofitVersion")
-    implementation("com.squareup.okhttp3:logging-interceptor:3.10.0")
+    implementation(Config.Libs.retrofit)
+    implementation(Config.Libs.retrofitGson)
+    implementation(Config.Libs.retrofitRxjava)
+    implementation(Config.Libs.okhttpLogging)
 }
 
 repositories {
