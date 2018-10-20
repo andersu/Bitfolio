@@ -3,4 +3,5 @@
     <string name="add_exchange_bittrex_explanation">Go to <a>https://bittrex.com/Manage?view=api</a> to create a new read only api key.</string>
     <string name="add_exchange_binance_explanation">Go to <a>https://www.binance.com/userCenter/createApi.html</a> to create a new read only api key.</string>
     <string name="add_exchange_title">Add exchange</string>
+    <string name="get_balances_error">Failed to get balances</string>
 </resources>

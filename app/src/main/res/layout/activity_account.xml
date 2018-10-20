@@ -4,9 +4,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.zredna.bitfolio.view.account.AccountActivity">
+    tools:context="com.zredna.bitfolio.ui.account.AccountActivity">
 
-    <com.zredna.bitfolio.view.custom.SlidingTabLayout
+    <com.zredna.bitfolio.ui.custom.SlidingTabLayout
         android:id="@+id/tabLayout"
         android:layout_width="match_parent"
         android:background="@color/primary"

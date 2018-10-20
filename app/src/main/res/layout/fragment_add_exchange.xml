@@ -47,7 +47,7 @@
         android:textSize="18sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-    <com.zredna.bitfolio.view.addexchange.ExchangeToggleButton
+    <com.zredna.bitfolio.ui.addexchange.ExchangeToggleButton
         android:id="@+id/bittrexButton"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -60,7 +60,7 @@
         app:layout_constraintStart_toEndOf="@+id/binanceButton"
         app:layout_constraintTop_toTopOf="@+id/binanceButton" />
 
-    <com.zredna.bitfolio.view.addexchange.ExchangeToggleButton
+    <com.zredna.bitfolio.ui.addexchange.ExchangeToggleButton
         android:id="@+id/binanceButton"
         android:layout_width="0dp"
         android:layout_height="wrap_content"

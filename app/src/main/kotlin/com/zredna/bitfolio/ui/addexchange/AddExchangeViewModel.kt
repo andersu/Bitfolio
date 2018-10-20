@@ -1,4 +1,4 @@
-package com.zredna.bitfolio.view.addexchange
+package com.zredna.bitfolio.ui.addexchange
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

@@ -1,6 +1,5 @@
 package com.zredna.bitfolio.service
 
-import com.zredna.bitfolio.ExchangeName
 import com.zredna.bitfolio.MarketSummary
 import com.zredna.bitfolio.converter.BittrexBalanceDtoConverter
 import com.zredna.bitfolio.converter.BittrexMarketSummaryDtoConverter

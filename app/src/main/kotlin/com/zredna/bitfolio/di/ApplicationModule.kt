@@ -17,9 +17,9 @@ import com.zredna.bitfolio.repository.BalanceRepository
 import com.zredna.bitfolio.repository.ExchangeRepository
 import com.zredna.bitfolio.service.BinanceService
 import com.zredna.bitfolio.service.BittrexService
-import com.zredna.bitfolio.view.account.balances.BalancesViewModel
-import com.zredna.bitfolio.view.account.exchanges.ExchangesViewModel
-import com.zredna.bitfolio.view.addexchange.AddExchangeViewModel
+import com.zredna.bitfolio.ui.account.balances.BalancesViewModel
+import com.zredna.bitfolio.ui.account.exchanges.ExchangesViewModel
+import com.zredna.bitfolio.ui.addexchange.AddExchangeViewModel
 import com.zredna.bittrex.apiclient.BittrexApiClient
 import com.zredna.bittrex.apiclient.BittrexCredentials
 import com.zredna.bittrex.apiclient.BittrexCredentialsProvider

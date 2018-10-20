@@ -1,10 +1,10 @@
-package com.zredna.bitfolio.view.account
+package com.zredna.bitfolio.ui.account
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
-import com.zredna.bitfolio.view.account.balances.BalancesFragment
-import com.zredna.bitfolio.view.account.exchanges.ExchangesFragment
+import com.zredna.bitfolio.ui.account.balances.BalancesFragment
+import com.zredna.bitfolio.ui.account.exchanges.ExchangesFragment
 
 class AccountPagerAdapter(
         private val fragments: List<Fragment>,

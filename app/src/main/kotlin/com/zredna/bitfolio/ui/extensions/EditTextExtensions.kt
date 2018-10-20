@@ -1,4 +1,4 @@
-package com.zredna.bitfolio.view.extensions
+package com.zredna.bitfolio.ui.extensions
 
 import android.content.Context
 import android.view.inputmethod.InputMethodManager

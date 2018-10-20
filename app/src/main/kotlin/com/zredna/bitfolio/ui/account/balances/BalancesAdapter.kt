@@ -1,4 +1,4 @@
-package com.zredna.bitfolio.view.account.balances
+package com.zredna.bitfolio.ui.account.balances
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView

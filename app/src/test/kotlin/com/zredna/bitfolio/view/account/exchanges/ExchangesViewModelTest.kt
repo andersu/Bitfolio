@@ -5,6 +5,7 @@ import com.zredna.bitfolio.BaseLiveDataTest
 import com.zredna.bitfolio.db.datamodel.Exchange
 import com.zredna.bitfolio.model.ExchangeCredentials
 import com.zredna.bitfolio.repository.ExchangeRepository
+import com.zredna.bitfolio.ui.account.exchanges.ExchangesViewModel
 import junit.framework.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test

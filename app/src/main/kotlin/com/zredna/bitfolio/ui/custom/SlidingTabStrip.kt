@@ -1,4 +1,4 @@
-package com.zredna.bitfolio.view.custom
+package com.zredna.bitfolio.ui.custom
 
 import android.content.Context
 import android.graphics.Canvas

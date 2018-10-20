@@ -1,7 +1,6 @@
-package com.zredna.bitfolio.view.account.balances
+package com.zredna.bitfolio.ui.account.balances
 
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.Observer
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -13,11 +12,14 @@ import com.zredna.bitfolio.db.datamodel.BalanceInBtc
 import com.zredna.bitfolio.R
 import com.zredna.bitfolio.repository.Resource
 import com.zredna.bitfolio.repository.Status
-import com.zredna.bitfolio.view.addexchange.REQUEST_CODE_ADD_EXCHANGE
+import com.zredna.bitfolio.ui.addexchange.REQUEST_CODE_ADD_EXCHANGE
 import kotlinx.android.synthetic.main.fragment_balances.*
+import observe
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import com.google.android.material.snackbar.Snackbar
 
-class BalancesFragment: Fragment() {
+
+class BalancesFragment : Fragment() {
     private val viewModel by viewModel<BalancesViewModel>()
 
     private val balancesAdapter = BalancesAdapter()
@@ -51,48 +53,58 @@ class BalancesFragment: Fragment() {
         swipeRefreshLayout.setOnRefreshListener { viewModel.refresh() }
     }
 
+    // region Observe view model
     private fun bindViewModel() {
-        viewModel.balances.observe(this, balancesResourceObserver)
-
-        viewModel.totalBalance.observe(this, totalBalanceObserver)
-        viewModel.isRefreshing().observe(this, refreshingObserver)
+        observe(viewModel.balances) { onBalancesUpdated(it) }
+        observe(viewModel.totalBalance) { onTotalBalanceUpdated(it) }
     }
 
-    // region Observers
-    private val balancesResourceObserver = Observer<Resource<List<BalanceInBtc>>> {
-        when (it?.status) {
-            Status.LOADING -> { }
-            Status.SUCCESS -> {
-                balancesAdapter.balances = it.data?.filter {
-                    balanceInBtc -> balanceInBtc.balanceInBtc > 0.0001
-                } ?: emptyList()
-                viewModel.balancesUpdated()
+    private fun onBalancesUpdated(balancesResource: Resource<List<BalanceInBtc>>?) {
+        when (balancesResource?.status) {
+            Status.LOADING -> {
+                showLoading()
             }
-            Status.ERROR -> { }
+            Status.SUCCESS -> {
+                hideLoading()
+                showBalances(balancesResource.data)
+            }
+            Status.ERROR -> {
+                hideLoading()
+                showError()
+            }
         }
     }
 
-    private val totalBalanceObserver = Observer<Double> {
-        it?.let { textViewTotalBalance.text = "฿ $it" }
-    }
-
-    private val refreshingObserver = Observer<Boolean> {
-        it?.let {
-            swipeRefreshLayout.isRefreshing = it
-            if (it) disableBalanceList() else enableBalanceList()
-        }
+    private fun onTotalBalanceUpdated(totalBalance: Double?) {
+        totalBalance?.let { textViewTotalBalance.text = "฿ $it" }
     }
     // endregion
 
     // region Helper methods
-    private fun disableBalanceList() {
-        recyclerViewBalances.isEnabled = false
-        recyclerViewBalances.alpha = 0.2f
+    private fun showLoading() {
+        swipeRefreshLayout.isRefreshing = true
+        view?.isEnabled = false
+        view?.alpha = 0.2f
     }
 
-    private fun enableBalanceList() {
-        recyclerViewBalances.isEnabled = true
-        recyclerViewBalances.alpha = 1f
+    private fun hideLoading() {
+        swipeRefreshLayout.isRefreshing = false
+        view?.isEnabled = true
+        view?.alpha = 1f
+    }
+
+    private fun showBalances(balances: List<BalanceInBtc>?) {
+        balancesAdapter.balances = balances?.filter { balanceInBtc ->
+            balanceInBtc.balanceInBtc > 0.0001
+        } ?: emptyList()
+    }
+
+    private fun showError() {
+        Snackbar.make(
+                coordinatorLayout,
+                R.string.get_balances_error,
+                Snackbar.LENGTH_INDEFINITE
+        ).show()
     }
     // endregion
 }

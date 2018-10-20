@@ -1,4 +1,4 @@
-package com.zredna.bitfolio.view.account.exchanges
+package com.zredna.bitfolio.ui.account.exchanges
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView

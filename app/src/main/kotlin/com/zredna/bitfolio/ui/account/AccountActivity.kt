@@ -1,13 +1,13 @@
-package com.zredna.bitfolio.view.account
+package com.zredna.bitfolio.ui.account
 
 import android.content.Intent
 import android.os.Bundle
 import com.zredna.bitfolio.R
 import androidx.appcompat.app.AppCompatActivity
-import com.zredna.bitfolio.view.account.balances.BalancesFragment
-import com.zredna.bitfolio.view.account.exchanges.ExchangesFragment
-import com.zredna.bitfolio.view.addexchange.AddExchangeActivity
-import com.zredna.bitfolio.view.addexchange.REQUEST_CODE_ADD_EXCHANGE
+import com.zredna.bitfolio.ui.account.balances.BalancesFragment
+import com.zredna.bitfolio.ui.account.exchanges.ExchangesFragment
+import com.zredna.bitfolio.ui.addexchange.AddExchangeActivity
+import com.zredna.bitfolio.ui.addexchange.REQUEST_CODE_ADD_EXCHANGE
 import kotlinx.android.synthetic.main.activity_account.*
 
 class AccountActivity : AppCompatActivity() {

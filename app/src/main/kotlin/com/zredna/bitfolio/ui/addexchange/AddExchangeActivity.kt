@@ -1,4 +1,4 @@
-package com.zredna.bitfolio.view.addexchange
+package com.zredna.bitfolio.ui.addexchange
 
 import android.os.Bundle
 import android.text.method.LinkMovementMethod
@@ -9,7 +9,7 @@ import androidx.lifecycle.Observer
 import com.zredna.bitfolio.ExchangeName
 import com.zredna.bitfolio.R
 import com.zredna.bitfolio.TextChangedListener
-import com.zredna.bitfolio.view.extensions.showKeyboard
+import com.zredna.bitfolio.ui.extensions.showKeyboard
 import kotlinx.android.synthetic.main.activity_add_exchange.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 

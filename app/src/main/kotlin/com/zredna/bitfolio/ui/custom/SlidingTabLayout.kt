@@ -1,4 +1,4 @@
-package com.zredna.bitfolio.view.custom
+package com.zredna.bitfolio.ui.custom
 
 import android.content.Context
 import android.graphics.Color
@@ -14,7 +14,7 @@ import android.widget.HorizontalScrollView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.viewpager.widget.ViewPager
-import com.zredna.bitfolio.view.custom.SlidingTabLayout.TabColorizer
+import com.zredna.bitfolio.ui.custom.SlidingTabLayout.TabColorizer
 
 /**
  * To be used with ViewPager to provide a tab indicator component which give constant feedback as to

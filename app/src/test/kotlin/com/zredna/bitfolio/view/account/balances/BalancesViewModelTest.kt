@@ -1,10 +1,12 @@
 package com.zredna.bitfolio.view.account.balances
 
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import com.zredna.bitfolio.BaseLiveDataTest
 import com.zredna.bitfolio.db.datamodel.BalanceInBtc
 import com.zredna.bitfolio.repository.BalanceRepository
 import com.zredna.bitfolio.repository.Resource
+import com.zredna.bitfolio.ui.account.balances.BalancesViewModel
 import junit.framework.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
@@ -17,63 +19,96 @@ class BalancesViewModelTest : BaseLiveDataTest() {
 
     private lateinit var balancesViewModel: BalancesViewModel
 
+    private val balancesLiveData = MutableLiveData<Resource<List<BalanceInBtc>>>()
+
     @Mock
     private lateinit var balanceRepository: BalanceRepository
 
+    @Mock
+    private lateinit var balancesObserver: Observer<Resource<List<BalanceInBtc>>>
+
+    @Mock
+    private lateinit var totalBalanceObserver: Observer<Double?>
+
     @Before
     fun setUp() {
-        balancesViewModel = BalancesViewModel(balanceRepository)
-    }
-
-    @Test
-    fun getBalancesEmptyList() {
-        val balancesLiveData = MutableLiveData<Resource<List<BalanceInBtc>>>()
-        val balances = Resource.success((emptyList<BalanceInBtc>()))
         given(balanceRepository.loadBalances()).willReturn(balancesLiveData)
 
         balancesViewModel = BalancesViewModel(balanceRepository)
-        balancesLiveData.value = balances
-
-        balancesViewModel.balances.observeForever { assertEquals(it, balances) }
-        balancesViewModel.totalBalance.observeForever { assertEquals(0.0, it) }
     }
 
     @Test
-    fun getBalancesNonEmptyList() {
-        val balancesLiveData = MutableLiveData<Resource<List<BalanceInBtc>>>()
+    fun initGetsBalancesFromRepository() {
+        verify(balanceRepository).loadBalances()
+    }
+
+    @Test
+    fun initTriggersLoadingState() {
+        balancesViewModel.balances.observeForever(balancesObserver)
+        verify(balancesObserver).onChanged(Resource.loading(null))
+    }
+
+    @Test
+    fun emptyBalancesTriggersBalancesObserver() {
+        balancesViewModel.balances.observeForever(balancesObserver)
+
+        val balancesResource = Resource.success((emptyList<BalanceInBtc>()))
+        balancesLiveData.value = balancesResource
+
+        assertEquals(balancesResource, balancesViewModel.balances.value)
+    }
+
+    @Test
+    fun emptyBalancesTriggersTotalBalanceObserver() {
+        balancesViewModel.totalBalance.observeForever(totalBalanceObserver)
+
+        val balancesResource = Resource.success((emptyList<BalanceInBtc>()))
+        balancesLiveData.value = balancesResource
+
+        assertEquals(0.0, balancesViewModel.totalBalance.value)
+    }
+
+    @Test
+    fun nonEmptyBalancesTriggersBalancesObserver() {
+        balancesViewModel.balances.observeForever(balancesObserver)
         val balances = Resource.success(
                 listOf(BalanceInBtc("currency1", 0.10),
                         BalanceInBtc("currency2", 0.20)
                 )
         )
-        given(balanceRepository.loadBalances()).willReturn(balancesLiveData)
-
-        balancesViewModel = BalancesViewModel(balanceRepository)
         balancesLiveData.value = balances
 
-        balancesViewModel.balances.observeForever { assertEquals(it, balances) }
-        balancesViewModel.totalBalance.observeForever { assertEquals(0.30, it) }
+        assertEquals(balances, balancesViewModel.balances.value)
     }
 
     @Test
-    fun balancesUpdatedStopsRefreshing() {
-        balancesViewModel.balancesUpdated()
+    fun nonEmptyBalancesTriggersTotalBalanceObserver() {
+        balancesViewModel.totalBalance.observeForever(totalBalanceObserver)
+        val balances = Resource.success(
+                listOf(BalanceInBtc("currency1", 0.10),
+                        BalanceInBtc("currency2", 0.20)
+                )
+        )
+        balancesLiveData.value = balances
 
-        balancesViewModel.isRefreshing().observeForever { assertEquals(it, false) }
+        assertEquals(0.30, balancesViewModel.totalBalance.value)
     }
 
     @Test
-    fun refreshStartsRefreshing() {
+    fun refreshTriggersLoadingState() {
+        balancesViewModel.balances.observeForever(balancesObserver)
+
         balancesViewModel.refresh()
 
-        balancesViewModel.isRefreshing().observeForever { assertEquals(it, true) }
+        // Once when initializing the view model and again when refreshing
+        verify(balancesObserver, times(2)).onChanged(Resource.loading(null))
     }
 
     @Test
     fun refreshLoadsNewBalances() {
         balancesViewModel.refresh()
 
-        // Once when initializing the viewmodel and again when refreshing
+        // Once when initializing the view model and again when refreshing
         verify(balanceRepository, times(2)).loadBalances()
     }
 }
