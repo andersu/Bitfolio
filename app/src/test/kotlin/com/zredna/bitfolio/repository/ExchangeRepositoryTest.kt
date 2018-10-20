@@ -10,9 +10,11 @@ import com.zredna.bitfolio.domain.model.ExchangeName
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
+import org.junit.Before
 import org.junit.Test
 import org.mockito.BDDMockito.given
 import org.mockito.Mock
+import org.mockito.Mockito.mock
 import org.mockito.Mockito.verify
 
 class ExchangeRepositoryTest: BaseLiveDataTest() {
@@ -26,6 +28,11 @@ class ExchangeRepositoryTest: BaseLiveDataTest() {
     private lateinit var sharedPreferencesEditor: SharedPreferences.Editor
     @Mock
     private lateinit var exchangeCredentials: ExchangeCredentials
+
+    @Before
+    fun setUp() {
+        exchangeRepository = ExchangeRepository(exchangeDao, sharedPreferences)
+    }
 
     private fun setUpSaveExchangeTest(
             exchangeName: ExchangeName = ExchangeName.BITTREX,
@@ -123,5 +130,33 @@ class ExchangeRepositoryTest: BaseLiveDataTest() {
         val result = exchangeRepository.containsCredentialsForExchange(exchangeName)
 
         assertTrue(result)
+    }
+
+    @Test
+    fun deleteRemovesApiKeyAndSecretFromSharedPreferences() {
+        val exchangeCredentials = mock(ExchangeCredentials::class.java)
+        val exchangeName = ExchangeName.BITTREX
+
+        given(exchangeCredentials.name).willReturn(exchangeName)
+        given(sharedPreferences.edit()).willReturn(sharedPreferencesEditor)
+
+        exchangeRepository.delete(exchangeCredentials)
+
+        verify(sharedPreferencesEditor).remove("${exchangeName.name}_api_key")
+        verify(sharedPreferencesEditor).remove("${exchangeName.name}_secret")
+        verify(sharedPreferencesEditor).apply()
+    }
+
+    @Test
+    fun deleteCallsDaoToDeleteExchange() {
+        val exchangeCredentials = mock(ExchangeCredentials::class.java)
+        val exchangeName = ExchangeName.BITTREX
+
+        given(exchangeCredentials.name).willReturn(exchangeName)
+        given(sharedPreferences.edit()).willReturn(sharedPreferencesEditor)
+
+        exchangeRepository.delete(exchangeCredentials)
+
+        verify(exchangeDao).delete(Exchange(exchangeName.name))
     }
 }
