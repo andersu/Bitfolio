@@ -4,10 +4,10 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import com.zredna.bitfolio.BaseLiveDataTest
 import com.zredna.bitfolio.db.datamodel.BalanceInBtc
-import com.zredna.bitfolio.repository.BalanceRepository
+import com.zredna.bitfolio.domain.GetBalancesUseCase
 import com.zredna.bitfolio.repository.Resource
 import com.zredna.bitfolio.ui.account.balances.BalancesViewModel
-import junit.framework.Assert.assertEquals
+import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 import org.mockito.BDDMockito.given
@@ -22,7 +22,7 @@ class BalancesViewModelTest : BaseLiveDataTest() {
     private val balancesLiveData = MutableLiveData<Resource<List<BalanceInBtc>>>()
 
     @Mock
-    private lateinit var balanceRepository: BalanceRepository
+    private lateinit var getBalances: GetBalancesUseCase
 
     @Mock
     private lateinit var balancesObserver: Observer<Resource<List<BalanceInBtc>>>
@@ -32,14 +32,14 @@ class BalancesViewModelTest : BaseLiveDataTest() {
 
     @Before
     fun setUp() {
-        given(balanceRepository.loadBalances()).willReturn(balancesLiveData)
+        given(getBalances()).willReturn(balancesLiveData)
 
-        balancesViewModel = BalancesViewModel(balanceRepository)
+        balancesViewModel = BalancesViewModel(getBalances)
     }
 
     @Test
-    fun initGetsBalancesFromRepository() {
-        verify(balanceRepository).loadBalances()
+    fun initGetsBalances() {
+        verify(getBalances).invoke()
     }
 
     @Test
@@ -109,6 +109,6 @@ class BalancesViewModelTest : BaseLiveDataTest() {
         balancesViewModel.refresh()
 
         // Once when initializing the view model and again when refreshing
-        verify(balanceRepository, times(2)).loadBalances()
+        verify(getBalances, times(2)).invoke()
     }
 }

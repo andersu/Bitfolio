@@ -122,6 +122,8 @@ class BalanceRepository(
             } ?: balancesInBtc.add(balance)
         }
 
+        balancesInBtc.forEach { it.balanceInBtc.roundTo8() }
+
         return balancesInBtc
     }
 }

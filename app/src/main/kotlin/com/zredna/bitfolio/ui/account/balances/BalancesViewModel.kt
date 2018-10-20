@@ -5,13 +5,11 @@ import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import com.zredna.bitfolio.db.datamodel.BalanceInBtc
-import com.zredna.bitfolio.repository.BalanceRepository
-import com.zredna.bitfolio.repository.Resource
+import com.zredna.bitfolio.domain.GetBalancesUseCase
 import com.zredna.bitfolio.extensions.roundTo8
+import com.zredna.bitfolio.repository.Resource
 
-class BalancesViewModel(
-        private val balanceRepository: BalanceRepository
-) : ViewModel() {
+class BalancesViewModel(private val getBalances: GetBalancesUseCase) : ViewModel() {
 
     private val mutableBalances = MediatorLiveData<Resource<List<BalanceInBtc>>>()
     val balances: LiveData<Resource<List<BalanceInBtc>>>
@@ -23,14 +21,14 @@ class BalancesViewModel(
 
     init {
         postLoading()
-        mutableBalances.addSource(balanceRepository.loadBalances()) {
+        mutableBalances.addSource(getBalances()) {
             mutableBalances.value = it
         }
     }
 
     fun refresh() {
         postLoading()
-        balanceRepository.loadBalances()
+        getBalances()
     }
 
     private fun postLoading() {
