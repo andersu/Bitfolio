@@ -1,9 +1,9 @@
 package com.zredna.bitfolio.service
 
-import com.zredna.bitfolio.MarketSummary
-import com.zredna.bitfolio.converter.BittrexBalanceDtoConverter
-import com.zredna.bitfolio.converter.BittrexMarketSummaryDtoConverter
-import com.zredna.bitfolio.model.Balance
+import com.zredna.bitfolio.domain.model.MarketSummary
+import com.zredna.bitfolio.domain.converter.BittrexBalanceDtoConverter
+import com.zredna.bitfolio.domain.converter.BittrexMarketSummaryDtoConverter
+import com.zredna.bitfolio.domain.model.Balance
 import com.zredna.bittrex.apiclient.BittrexApiClient
 import io.reactivex.Single
 

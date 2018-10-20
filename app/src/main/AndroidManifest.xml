@@ -19,7 +19,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.addexchange.AddExchangeActivity">
+        <activity android:name="com.zredna.bitfolio.ui.account.exchanges.addexchange.AddExchangeActivity">
         </activity>
     </application>
 

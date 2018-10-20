@@ -1,12 +1,11 @@
-package com.zredna.bitfolio.ui.addexchange
+package com.zredna.bitfolio.ui.account.exchanges.addexchange
 
 import android.os.Bundle
 import android.text.method.LinkMovementMethod
 import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.Observer
-import com.zredna.bitfolio.ExchangeName
+import com.zredna.bitfolio.domain.model.ExchangeName
 import com.zredna.bitfolio.R
 import com.zredna.bitfolio.TextChangedListener
 import com.zredna.bitfolio.ui.extensions.showKeyboard

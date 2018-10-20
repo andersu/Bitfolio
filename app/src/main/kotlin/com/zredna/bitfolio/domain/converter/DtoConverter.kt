@@ -1,4 +1,4 @@
-package com.zredna.bitfolio.converter
+package com.zredna.bitfolio.domain.converter
 
 abstract class DtoConverter<T, U> {
     fun convertToDtos(models: List<U>): List<T> = models.map { convertToDto(it) }

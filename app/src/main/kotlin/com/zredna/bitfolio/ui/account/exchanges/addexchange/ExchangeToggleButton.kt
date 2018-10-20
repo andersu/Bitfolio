@@ -1,4 +1,4 @@
-package com.zredna.bitfolio.ui.addexchange
+package com.zredna.bitfolio.ui.account.exchanges.addexchange
 
 import android.content.Context
 import android.util.AttributeSet

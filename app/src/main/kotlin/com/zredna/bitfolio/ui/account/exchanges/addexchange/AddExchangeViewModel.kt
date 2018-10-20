@@ -1,11 +1,11 @@
-package com.zredna.bitfolio.ui.addexchange
+package com.zredna.bitfolio.ui.account.exchanges.addexchange
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.zredna.bitfolio.ExchangeName
+import com.zredna.bitfolio.domain.model.ExchangeName
 import com.zredna.bitfolio.domain.SaveExchangeUseCase
-import com.zredna.bitfolio.model.ExchangeCredentials
+import com.zredna.bitfolio.domain.model.ExchangeCredentials
 
 class AddExchangeViewModel(
         private val saveExchange: SaveExchangeUseCase
@@ -46,6 +46,6 @@ class AddExchangeViewModel(
     }
 
     fun addExchange(exchangeName: ExchangeName, apiKey: String, secret: String) {
-        saveExchange(ExchangeCredentials(exchangeName.name, apiKey, secret))
+        saveExchange(ExchangeCredentials(exchangeName, apiKey, secret))
     }
 }

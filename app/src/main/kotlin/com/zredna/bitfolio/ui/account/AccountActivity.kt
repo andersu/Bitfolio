@@ -6,8 +6,8 @@ import com.zredna.bitfolio.R
 import androidx.appcompat.app.AppCompatActivity
 import com.zredna.bitfolio.ui.account.balances.BalancesFragment
 import com.zredna.bitfolio.ui.account.exchanges.ExchangesFragment
-import com.zredna.bitfolio.ui.addexchange.AddExchangeActivity
-import com.zredna.bitfolio.ui.addexchange.REQUEST_CODE_ADD_EXCHANGE
+import com.zredna.bitfolio.ui.account.exchanges.addexchange.AddExchangeActivity
+import com.zredna.bitfolio.ui.account.exchanges.addexchange.REQUEST_CODE_ADD_EXCHANGE
 import kotlinx.android.synthetic.main.activity_account.*
 
 class AccountActivity : AppCompatActivity() {

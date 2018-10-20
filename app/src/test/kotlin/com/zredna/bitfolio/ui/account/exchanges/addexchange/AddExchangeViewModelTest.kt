@@ -1,10 +1,10 @@
-package com.zredna.bitfolio.ui.addexchange
+package com.zredna.bitfolio.ui.account.exchanges.addexchange
 
 import androidx.lifecycle.Observer
 import com.zredna.bitfolio.BaseLiveDataTest
-import com.zredna.bitfolio.ExchangeName
+import com.zredna.bitfolio.domain.model.ExchangeName
 import com.zredna.bitfolio.domain.SaveExchangeUseCase
-import com.zredna.bitfolio.model.ExchangeCredentials
+import com.zredna.bitfolio.domain.model.ExchangeCredentials
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
@@ -83,6 +83,6 @@ class AddExchangeViewModelTest : BaseLiveDataTest() {
 
         viewModel.addExchange(exchangeName, apiKey, secret)
 
-        verify(saveExchange).invoke(ExchangeCredentials(exchangeName.name, apiKey, secret))
+        verify(saveExchange).invoke(ExchangeCredentials(exchangeName, apiKey, secret))
     }
 }

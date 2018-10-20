@@ -3,11 +3,11 @@ package com.zredna.bitfolio.repository
 import androidx.lifecycle.MutableLiveData
 import com.zredna.bitfolio.BaseLiveDataTest
 import com.zredna.bitfolio.BtcBalanceCalculator
-import com.zredna.bitfolio.ExchangeName
-import com.zredna.bitfolio.MarketSummary
+import com.zredna.bitfolio.domain.model.ExchangeName
+import com.zredna.bitfolio.domain.model.MarketSummary
 import com.zredna.bitfolio.db.BalanceDao
 import com.zredna.bitfolio.db.datamodel.BalanceInBtc
-import com.zredna.bitfolio.model.Balance
+import com.zredna.bitfolio.domain.model.Balance
 import com.zredna.bitfolio.service.BinanceService
 import com.zredna.bitfolio.service.BittrexService
 import io.reactivex.Single.just
@@ -49,9 +49,9 @@ class BalanceRepositoryTest : BaseLiveDataTest() {
         given(bittrexService.getBalances()).willReturn(just(bittrexBalances))
         given(bittrexService.getMarketSummaries()).willReturn(just(bittrexMarketSummaries))
         given(balanceDao.getBalances()).willReturn(balancesLiveData)
-        given(exchangeRepository.containsCredentialsForExchange(ExchangeName.BITTREX.name))
+        given(exchangeRepository.containsCredentialsForExchange(ExchangeName.BITTREX))
                 .willReturn(true)
-        given(exchangeRepository.containsCredentialsForExchange(ExchangeName.BINANCE.name))
+        given(exchangeRepository.containsCredentialsForExchange(ExchangeName.BINANCE))
                 .willReturn(true)
 
         given(binanceService.getBalances()).willReturn(just(binanceBalances))

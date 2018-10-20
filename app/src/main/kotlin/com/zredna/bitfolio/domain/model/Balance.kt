@@ -1,4 +1,4 @@
-package com.zredna.bitfolio.model
+package com.zredna.bitfolio.domain.model
 
 data class Balance(
         val currency: String,

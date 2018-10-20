@@ -5,7 +5,8 @@ import androidx.lifecycle.MutableLiveData
 import com.zredna.bitfolio.BaseLiveDataTest
 import com.zredna.bitfolio.db.ExchangeDao
 import com.zredna.bitfolio.db.datamodel.Exchange
-import com.zredna.bitfolio.model.ExchangeCredentials
+import com.zredna.bitfolio.domain.model.ExchangeCredentials
+import com.zredna.bitfolio.domain.model.ExchangeName
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
@@ -26,19 +27,32 @@ class ExchangeRepositoryTest: BaseLiveDataTest() {
     @Mock
     private lateinit var exchangeCredentials: ExchangeCredentials
 
+    private fun setUpSaveExchangeTest(
+            exchangeName: ExchangeName = ExchangeName.BITTREX,
+            apiKey: String = "apiKey",
+            secret: String = "secret"
+    ) {
+        given(exchangeCredentials.name).willReturn(exchangeName)
+        given(exchangeCredentials.apiKey).willReturn(apiKey)
+        given(exchangeCredentials.secret).willReturn(secret)
+        given(sharedPreferences.edit()).willReturn(sharedPreferencesEditor)
+        exchangeRepository = ExchangeRepository(exchangeDao, sharedPreferences)
+    }
+
     @Test
     fun saveExchangeInsertsExchangeUsingDao() {
-        setUpSaveExchangeTest()
+        val exchangeName = ExchangeName.BITTREX
+        setUpSaveExchangeTest(exchangeName = exchangeName)
 
         exchangeRepository.saveExchange(exchangeCredentials)
 
-        verify(exchangeDao).insert(anyKotlin())
+        verify(exchangeDao).insert(Exchange(exchangeName.name))
     }
 
     @Test
     fun saveExchangeSavesApiKeyAndSecretInPreferences() {
         val apiKey = "apiKey"
-        val name = "name"
+        val name = ExchangeName.BITTREX
         val secret = "secret"
         setUpSaveExchangeTest(name, apiKey, secret)
 
@@ -47,18 +61,6 @@ class ExchangeRepositoryTest: BaseLiveDataTest() {
         verify(sharedPreferencesEditor).putString("${name}_api_key", apiKey)
         verify(sharedPreferencesEditor).putString("${name}_secret", secret)
         verify(sharedPreferencesEditor).apply()
-    }
-
-    private fun setUpSaveExchangeTest(
-            name: String = "name",
-            apiKey: String = "apiKey",
-            secret: String = "secret"
-    ) {
-        given(exchangeCredentials.name).willReturn(name)
-        given(exchangeCredentials.apiKey).willReturn(apiKey)
-        given(exchangeCredentials.secret).willReturn(secret)
-        given(sharedPreferences.edit()).willReturn(sharedPreferencesEditor)
-        exchangeRepository = ExchangeRepository(exchangeDao, sharedPreferences)
     }
 
     @Test
@@ -76,7 +78,7 @@ class ExchangeRepositoryTest: BaseLiveDataTest() {
 
     @Test
     fun getCredentialsForExchangeReturnsExchangeCredentialsWithValuesFromSharedPreferences() {
-        val exchangeName = "exchangeName"
+        val exchangeName = ExchangeName.BINANCE
         val apiKey = "apiKey"
         val secret = "secret"
         given(sharedPreferences.getString("${exchangeName}_api_key", ""))
@@ -95,7 +97,7 @@ class ExchangeRepositoryTest: BaseLiveDataTest() {
 
     @Test
     fun containsCredentialsForExchangeReturnsFalseIfNoApiKeyInSharedPreferences() {
-        val exchangeName = "exchangeName"
+        val exchangeName = ExchangeName.BINANCE
         val secret = "secret"
         given(sharedPreferences.getString("${exchangeName}_api_key", ""))
                 .willReturn("")
@@ -110,7 +112,7 @@ class ExchangeRepositoryTest: BaseLiveDataTest() {
 
     @Test
     fun containsCredentialsForExchangeReturnsTrueIfApiKeyInSharedPreferences() {
-        val exchangeName = "exchangeName"
+        val exchangeName = ExchangeName.BITTREX
         val apiKey = "apiKey"
         given(sharedPreferences.getString("${exchangeName}_api_key", ""))
                 .willReturn(apiKey)

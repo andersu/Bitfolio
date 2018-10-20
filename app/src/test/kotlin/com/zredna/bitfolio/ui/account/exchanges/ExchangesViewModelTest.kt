@@ -3,25 +3,43 @@ package com.zredna.bitfolio.ui.account.exchanges
 import androidx.lifecycle.MutableLiveData
 import com.zredna.bitfolio.BaseLiveDataTest
 import com.zredna.bitfolio.db.datamodel.Exchange
-import com.zredna.bitfolio.model.ExchangeCredentials
-import com.zredna.bitfolio.repository.ExchangeRepository
+import com.zredna.bitfolio.domain.DeleteExchangeUseCase
+import com.zredna.bitfolio.domain.GetExchangeCredentialsUseCase
+import com.zredna.bitfolio.domain.GetExchangesUseCase
+import com.zredna.bitfolio.domain.model.ExchangeCredentials
+import com.zredna.bitfolio.domain.model.ExchangeName
 import junit.framework.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 import org.mockito.BDDMockito.given
 import org.mockito.Mock
 import org.mockito.Mockito.mock
+import org.mockito.Mockito.verify
 
 class ExchangesViewModelTest: BaseLiveDataTest() {
 
     private lateinit var exchangesViewModel: ExchangesViewModel
 
     @Mock
-    private lateinit var exchangeRepository: ExchangeRepository
+    private lateinit var getExchanges: GetExchangesUseCase
+
+    @Mock
+    private lateinit var getExchangeCredentials: GetExchangeCredentialsUseCase
+
+    @Mock
+    private lateinit var deleteExchange: DeleteExchangeUseCase
 
     @Before
     fun setUp() {
-        exchangesViewModel = ExchangesViewModel(exchangeRepository)
+        setUpExchangesViewModel()
+    }
+
+    private fun setUpExchangesViewModel() {
+        exchangesViewModel = ExchangesViewModel(
+                getExchanges,
+                getExchangeCredentials,
+                deleteExchange
+        )
     }
 
     @Test
@@ -29,9 +47,9 @@ class ExchangesViewModelTest: BaseLiveDataTest() {
         val exchangesLiveData = MutableLiveData<List<Exchange>>()
         val exchanges = emptyList<Exchange>()
         exchangesLiveData.value = exchanges
-        given(exchangeRepository.loadExchanges()).willReturn(exchangesLiveData)
+        given(getExchanges.invoke()).willReturn(exchangesLiveData)
 
-        exchangesViewModel = ExchangesViewModel(exchangeRepository)
+        setUpExchangesViewModel()
 
         exchangesViewModel.exchangeCredentials.observeForever {
             assert(it!!.isEmpty())
@@ -40,21 +58,21 @@ class ExchangesViewModelTest: BaseLiveDataTest() {
 
     @Test
     fun getExchangeCredentials() {
-        val exchange1Name = "Exchange 1"
-        val exchange2Name = "Exchange 2"
+        val exchange1Name = ExchangeName.BITTREX
+        val exchange2Name = ExchangeName.BINANCE
         val exchange1Credentials = mock(ExchangeCredentials::class.java)
         val exchange2Credentials = mock(ExchangeCredentials::class.java)
         val exchangesLiveData = MutableLiveData<List<Exchange>>()
-        val exchanges = listOf(Exchange(exchange1Name), Exchange(exchange2Name))
+        val exchanges = listOf(Exchange(exchange1Name.name), Exchange(exchange2Name.name))
         exchangesLiveData.value = exchanges
 
-        given(exchangeRepository.loadExchanges()).willReturn(exchangesLiveData)
-        given(exchangeRepository.getCredentialsForExchange(exchange1Name))
+        given(getExchanges.invoke()).willReturn(exchangesLiveData)
+        given(getExchangeCredentials.invoke(exchange1Name))
                 .willReturn(exchange1Credentials)
-        given(exchangeRepository.getCredentialsForExchange(exchange2Name))
+        given(getExchangeCredentials.invoke(exchange2Name))
                 .willReturn(exchange2Credentials)
 
-        exchangesViewModel = ExchangesViewModel(exchangeRepository)
+        setUpExchangesViewModel()
 
         exchangesViewModel.exchangeCredentials.observeForever {
             assertEquals(it?.first(), exchange1Credentials)
@@ -67,12 +85,20 @@ class ExchangesViewModelTest: BaseLiveDataTest() {
         val exchangesLiveData = MutableLiveData<List<Exchange>>()
         val exchanges = listOf(mock(Exchange::class.java), mock(Exchange::class.java))
         exchangesLiveData.value = exchanges
-        given(exchangeRepository.loadExchanges()).willReturn(exchangesLiveData)
+        given(getExchanges.invoke()).willReturn(exchangesLiveData)
 
-        exchangesViewModel = ExchangesViewModel(exchangeRepository)
+        setUpExchangesViewModel()
 
         exchangesViewModel.exchanges.observeForever {
             assertEquals(exchanges, it)
         }
+    }
+
+    @Test
+    fun deleteClickedCallsDeleteExchangeUseCase() {
+        val exchangeCredentials = mock(ExchangeCredentials::class.java)
+        exchangesViewModel.deleteClicked(exchangeCredentials)
+
+        verify(deleteExchange).invoke(exchangeCredentials)
     }
 }

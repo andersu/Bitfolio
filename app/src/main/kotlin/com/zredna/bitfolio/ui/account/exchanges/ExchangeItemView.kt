@@ -2,13 +2,10 @@ package com.zredna.bitfolio.ui.account.exchanges
 
 import android.content.Context
 import android.util.AttributeSet
-import android.view.LayoutInflater
 import android.view.View
-import android.widget.LinearLayout
 import android.widget.RelativeLayout
-import androidx.constraintlayout.widget.ConstraintLayout
 import com.zredna.bitfolio.R
-import com.zredna.bitfolio.model.ExchangeCredentials
+import com.zredna.bitfolio.domain.model.ExchangeCredentials
 import kotlinx.android.synthetic.main.item_view_exchange.view.*
 
 class ExchangeItemView @JvmOverloads constructor(
@@ -20,7 +17,7 @@ class ExchangeItemView @JvmOverloads constructor(
     }
 
     fun bind(exchangeCredentials: ExchangeCredentials, onDeleteClick: () -> Unit) {
-        textViewName.text = exchangeCredentials.name
+        textViewName.text = exchangeCredentials.name.name
 
         imageView.setOnClickListener { onDeleteClick() }
     }

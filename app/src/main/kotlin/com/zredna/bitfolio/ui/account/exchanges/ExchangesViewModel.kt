@@ -3,23 +3,27 @@ package com.zredna.bitfolio.ui.account.exchanges
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
-import com.zredna.bitfolio.model.ExchangeCredentials
-import com.zredna.bitfolio.repository.ExchangeRepository
+import com.zredna.bitfolio.domain.DeleteExchangeUseCase
+import com.zredna.bitfolio.domain.GetExchangeCredentialsUseCase
+import com.zredna.bitfolio.domain.GetExchangesUseCase
+import com.zredna.bitfolio.domain.model.ExchangeCredentials
+import com.zredna.bitfolio.domain.model.ExchangeName
 
 class ExchangesViewModel(
-        private val exchangeRepository: ExchangeRepository
+        getExchanges: GetExchangesUseCase,
+        private val getExchangeCredentials: GetExchangeCredentialsUseCase,
+        private val deleteExchange: DeleteExchangeUseCase
 ) : ViewModel() {
 
     var exchangeCredentials: LiveData<List<ExchangeCredentials>> =
-            Transformations.map(exchangeRepository.loadExchanges()) { exchanges ->
+            Transformations.map(getExchanges()) { exchanges ->
                 exchanges.map {
-                    exchangeRepository.getCredentialsForExchange(it.name)
+                    getExchangeCredentials(ExchangeName.valueOf(it.name))
                 }
             }
 
-    var exchanges = exchangeRepository.loadExchanges()
+    var exchanges = getExchanges()
 
-    fun deleteClicked(exchangeCredentials: ExchangeCredentials) {
-        exchangeRepository.delete(exchangeCredentials)
-    }
+    fun deleteClicked(exchangeCredentials: ExchangeCredentials) =
+            deleteExchange(exchangeCredentials)
 }

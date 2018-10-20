@@ -1,7 +1,7 @@
-package com.zredna.bitfolio.converter
+package com.zredna.bitfolio.domain.converter
 
 import com.zredna.binanceapiclient.dto.MarketSummaryDto
-import com.zredna.bitfolio.MarketSummary
+import com.zredna.bitfolio.domain.model.MarketSummary
 
 class BinanceMarketSummaryDtoConverter : DtoConverter<MarketSummaryDto, MarketSummary>() {
     override fun convertToDto(model: MarketSummary): MarketSummaryDto {

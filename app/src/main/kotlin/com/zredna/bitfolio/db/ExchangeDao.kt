@@ -6,7 +6,6 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import com.zredna.bitfolio.db.datamodel.Exchange
-import com.zredna.bitfolio.model.ExchangeCredentials
 
 @Dao
 interface ExchangeDao {

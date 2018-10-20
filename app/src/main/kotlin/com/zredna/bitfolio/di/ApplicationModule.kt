@@ -7,13 +7,16 @@ import com.zredna.binanceapiclient.BinanceCredentials
 import com.zredna.binanceapiclient.BinanceCredentialsProvider
 import com.zredna.bitfolio.BtcBalanceCalculator
 import com.zredna.bitfolio.BuildConfig.DEBUG
-import com.zredna.bitfolio.ExchangeName
-import com.zredna.bitfolio.converter.BinanceBalanceDtoConverter
-import com.zredna.bitfolio.converter.BinanceMarketSummaryDtoConverter
-import com.zredna.bitfolio.converter.BittrexBalanceDtoConverter
-import com.zredna.bitfolio.converter.BittrexMarketSummaryDtoConverter
+import com.zredna.bitfolio.domain.model.ExchangeName
+import com.zredna.bitfolio.domain.converter.BinanceBalanceDtoConverter
+import com.zredna.bitfolio.domain.converter.BinanceMarketSummaryDtoConverter
+import com.zredna.bitfolio.domain.converter.BittrexBalanceDtoConverter
+import com.zredna.bitfolio.domain.converter.BittrexMarketSummaryDtoConverter
 import com.zredna.bitfolio.db.BitfolioDatabase
+import com.zredna.bitfolio.domain.DeleteExchangeUseCase
 import com.zredna.bitfolio.domain.GetBalancesUseCase
+import com.zredna.bitfolio.domain.GetExchangeCredentialsUseCase
+import com.zredna.bitfolio.domain.GetExchangesUseCase
 import com.zredna.bitfolio.domain.SaveExchangeUseCase
 import com.zredna.bitfolio.repository.BalanceRepository
 import com.zredna.bitfolio.repository.ExchangeRepository
@@ -21,7 +24,7 @@ import com.zredna.bitfolio.service.BinanceService
 import com.zredna.bitfolio.service.BittrexService
 import com.zredna.bitfolio.ui.account.balances.BalancesViewModel
 import com.zredna.bitfolio.ui.account.exchanges.ExchangesViewModel
-import com.zredna.bitfolio.ui.addexchange.AddExchangeViewModel
+import com.zredna.bitfolio.ui.account.exchanges.addexchange.AddExchangeViewModel
 import com.zredna.bittrex.apiclient.BittrexApiClient
 import com.zredna.bittrex.apiclient.BittrexCredentials
 import com.zredna.bittrex.apiclient.BittrexCredentialsProvider
@@ -31,20 +34,28 @@ import org.koin.dsl.module.Module
 import org.koin.dsl.module.module
 
 val bitfolioModule: Module = module {
+    // ViewModels
     viewModel { BalancesViewModel(get()) }
-    viewModel { ExchangesViewModel(get()) }
+    viewModel { ExchangesViewModel(get(), get(), get()) }
     viewModel { AddExchangeViewModel(get()) }
 
-    single { androidApplication().getSharedPreferences("bitfolio", Context.MODE_PRIVATE) }
-
+    // UseCases
+    single { DeleteExchangeUseCase(get()) }
     single { GetBalancesUseCase(get()) }
+    single { GetExchangeCredentialsUseCase(get()) }
+    single { GetExchangesUseCase(get()) }
     single { SaveExchangeUseCase(get()) }
 
+    // Repositories
     single { BalanceRepository(get(), get(), get(), get(), get()) }
     single { ExchangeRepository(get(), get()) }
 
+    // SharedPreferences
+    single { androidApplication().getSharedPreferences("bitfolio", Context.MODE_PRIVATE) }
+
     single { BtcBalanceCalculator() }
 
+    // Database
     single {
         Room.databaseBuilder(
                 androidApplication(),
@@ -53,6 +64,7 @@ val bitfolioModule: Module = module {
         ).build()
     }
 
+    // Daos
     single { get<BitfolioDatabase>().balanceDao() }
     single { get<BitfolioDatabase>().exchangeDao() }
 
@@ -66,7 +78,7 @@ val bitfolioModule: Module = module {
         builder.build(object : BittrexCredentialsProvider {
             override fun getCredentials(): BittrexCredentials {
                 val exchangeCredentials = exchangeCredentialsRepository
-                        .getCredentialsForExchange(ExchangeName.BITTREX.name)
+                        .getCredentialsForExchange(ExchangeName.BITTREX)
                 return BittrexCredentials(exchangeCredentials.apiKey, exchangeCredentials.secret)
             }
         })
@@ -84,7 +96,7 @@ val bitfolioModule: Module = module {
         builder.build(object : BinanceCredentialsProvider {
             override fun getCredentials(): BinanceCredentials {
                 val exchangeCredentials = exchangeCredentialsRepository
-                        .getCredentialsForExchange(ExchangeName.BINANCE.name)
+                        .getCredentialsForExchange(ExchangeName.BINANCE)
                 return BinanceCredentials(exchangeCredentials.apiKey, exchangeCredentials.secret)
             }
         })

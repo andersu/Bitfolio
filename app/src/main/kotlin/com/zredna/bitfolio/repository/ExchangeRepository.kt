@@ -4,7 +4,8 @@ import androidx.lifecycle.LiveData
 import android.content.SharedPreferences
 import com.zredna.bitfolio.db.ExchangeDao
 import com.zredna.bitfolio.db.datamodel.Exchange
-import com.zredna.bitfolio.model.ExchangeCredentials
+import com.zredna.bitfolio.domain.model.ExchangeCredentials
+import com.zredna.bitfolio.domain.model.ExchangeName
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
 
@@ -14,14 +15,14 @@ class ExchangeRepository(
 ) {
     private val exchanges = exchangeDao.getExchanges()
 
-    private fun apiKeyPreferenceKey(exchangeName: String) = "${exchangeName}_api_key"
-    private fun secretPreferenceKey(exchangeName: String) = "${exchangeName}_secret"
+    private fun apiKeyPreferenceKey(exchangeName: ExchangeName) = "${exchangeName.name}_api_key"
+    private fun secretPreferenceKey(exchangeName: ExchangeName) = "${exchangeName.name}_secret"
 
     fun saveExchange(exchangeCredentials: ExchangeCredentials) {
         Single.just(exchangeCredentials)
                 .subscribeOn(Schedulers.io())
                 .doOnSuccess {
-                    exchangeDao.insert(Exchange(exchangeCredentials.name))
+                    exchangeDao.insert(Exchange(exchangeCredentials.name.name))
                 }
                 .subscribe()
 
@@ -42,14 +43,14 @@ class ExchangeRepository(
         return exchanges
     }
 
-    fun getCredentialsForExchange(exchangeName: String): ExchangeCredentials {
+    fun getCredentialsForExchange(exchangeName: ExchangeName): ExchangeCredentials {
         val apiKey = sharedPreferences.getString(apiKeyPreferenceKey(exchangeName), "")
         val secret = sharedPreferences.getString(secretPreferenceKey(exchangeName), "")
 
         return ExchangeCredentials(exchangeName, apiKey, secret)
     }
 
-    fun containsCredentialsForExchange(exchangeName: String): Boolean {
+    fun containsCredentialsForExchange(exchangeName: ExchangeName): Boolean {
         return getCredentialsForExchange(exchangeName).apiKey.isNotEmpty()
     }
 
@@ -62,7 +63,7 @@ class ExchangeRepository(
                     editor.remove(apiKeyPreferenceKey(exchangeName))
                     editor.remove(secretPreferenceKey(exchangeName))
                     editor.apply()
-                    exchangeDao.delete(Exchange(exchangeName))
+                    exchangeDao.delete(Exchange(exchangeName.name))
                 }
                 .subscribe()
     }

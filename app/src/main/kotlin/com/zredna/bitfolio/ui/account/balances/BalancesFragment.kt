@@ -12,7 +12,7 @@ import com.zredna.bitfolio.db.datamodel.BalanceInBtc
 import com.zredna.bitfolio.R
 import com.zredna.bitfolio.repository.Resource
 import com.zredna.bitfolio.repository.Status
-import com.zredna.bitfolio.ui.addexchange.REQUEST_CODE_ADD_EXCHANGE
+import com.zredna.bitfolio.ui.account.exchanges.addexchange.REQUEST_CODE_ADD_EXCHANGE
 import kotlinx.android.synthetic.main.fragment_balances.*
 import observe
 import org.koin.androidx.viewmodel.ext.android.viewModel

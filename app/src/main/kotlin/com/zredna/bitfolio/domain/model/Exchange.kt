@@ -1,7 +1,7 @@
-package com.zredna.bitfolio.model
+package com.zredna.bitfolio.domain.model
 
 data class ExchangeCredentials(
-        val name: String,
+        val name: ExchangeName,
         val apiKey: String,
         val secret: String
 )

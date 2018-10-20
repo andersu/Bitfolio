@@ -1,10 +1,10 @@
 package com.zredna.bitfolio.service
 
 import com.zredna.binanceapiclient.BinanceApiClient
-import com.zredna.bitfolio.MarketSummary
-import com.zredna.bitfolio.converter.BinanceBalanceDtoConverter
-import com.zredna.bitfolio.converter.BinanceMarketSummaryDtoConverter
-import com.zredna.bitfolio.model.Balance
+import com.zredna.bitfolio.domain.model.MarketSummary
+import com.zredna.bitfolio.domain.converter.BinanceBalanceDtoConverter
+import com.zredna.bitfolio.domain.converter.BinanceMarketSummaryDtoConverter
+import com.zredna.bitfolio.domain.model.Balance
 import io.reactivex.Single
 
 class BinanceService(

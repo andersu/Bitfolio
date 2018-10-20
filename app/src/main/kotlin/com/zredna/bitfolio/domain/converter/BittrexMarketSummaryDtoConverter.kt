@@ -1,6 +1,6 @@
-package com.zredna.bitfolio.converter
+package com.zredna.bitfolio.domain.converter
 
-import com.zredna.bitfolio.MarketSummary
+import com.zredna.bitfolio.domain.model.MarketSummary
 import com.zredna.bittrex.apiclient.dto.MarketSummaryDto
 
 class BittrexMarketSummaryDtoConverter : DtoConverter<MarketSummaryDto, MarketSummary>() {

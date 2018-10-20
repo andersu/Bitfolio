@@ -1,4 +1,4 @@
-package com.zredna.bitfolio
+package com.zredna.bitfolio.domain.model
 
 enum class ExchangeName {
     BITTREX,
