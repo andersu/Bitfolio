@@ -4,32 +4,31 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.zredna.bitfolio.ExchangeName
+import com.zredna.bitfolio.domain.SaveExchangeUseCase
 import com.zredna.bitfolio.model.ExchangeCredentials
-import com.zredna.bitfolio.repository.ExchangeRepository
 
 class AddExchangeViewModel(
-        private val exchangeRepository: ExchangeRepository
+        private val saveExchange: SaveExchangeUseCase
 ): ViewModel() {
-    private val selectedExchange = MutableLiveData<ExchangeName>()
-    private val isAddExchangeEnabled = MutableLiveData<Boolean>()
+
+    private val _selectedExchange = MutableLiveData<ExchangeName>()
+    val selectedExchange: LiveData<ExchangeName>
+        get() = _selectedExchange
+
+    private val _isAddExchangeEnabled = MutableLiveData<Boolean>()
+    val isAddExchangeEnabled: LiveData<Boolean>
+        get() = _isAddExchangeEnabled
+
 
     private var apiKey = ""
     private var secret = ""
 
     init {
-        isAddExchangeEnabled.value = false
-    }
-
-    fun getSelectedExchange(): LiveData<ExchangeName> {
-        return selectedExchange
-    }
-
-    fun isAddExchangeEnabled(): LiveData<Boolean> {
-        return isAddExchangeEnabled
+        _isAddExchangeEnabled.value = false
     }
 
     fun exchangeSelected(exchangeName: ExchangeName) {
-        selectedExchange.value = exchangeName
+        _selectedExchange.value = exchangeName
     }
 
     fun apiKeyTextChanged(text: String) {
@@ -43,10 +42,10 @@ class AddExchangeViewModel(
     }
 
     private fun updateAddExchangeEnabled() {
-        isAddExchangeEnabled.value = apiKey.isNotEmpty() && secret.isNotEmpty()
+        _isAddExchangeEnabled.value = apiKey.isNotEmpty() && secret.isNotEmpty()
     }
 
     fun addExchange(exchangeName: ExchangeName, apiKey: String, secret: String) {
-        exchangeRepository.saveExchange(ExchangeCredentials(exchangeName.name, apiKey, secret))
+        saveExchange(ExchangeCredentials(exchangeName.name, apiKey, secret))
     }
 }

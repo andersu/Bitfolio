@@ -55,8 +55,8 @@ class BalancesFragment : Fragment() {
 
     // region Observe view model
     private fun bindViewModel() {
-        observe(viewModel.balances) { onBalancesUpdated(it) }
-        observe(viewModel.totalBalance) { onTotalBalanceUpdated(it) }
+        observe(viewModel.balances, ::onBalancesUpdated)
+        observe(viewModel.totalBalance, ::onTotalBalanceUpdated)
     }
 
     private fun onBalancesUpdated(balancesResource: Resource<List<BalanceInBtc>>?) {

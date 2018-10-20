@@ -11,6 +11,7 @@ import com.zredna.bitfolio.R
 import com.zredna.bitfolio.TextChangedListener
 import com.zredna.bitfolio.ui.extensions.showKeyboard
 import kotlinx.android.synthetic.main.activity_add_exchange.*
+import observe
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 const val REQUEST_CODE_ADD_EXCHANGE = 7891
@@ -57,7 +58,7 @@ class AddExchangeActivity : AppCompatActivity() {
         addExchangeButton.setOnClickListener {
             val apiKey = apiKeyInput.text.toString()
             val secret = secretInput.text.toString()
-            viewModel.getSelectedExchange().value?.let { exchange ->
+            viewModel.selectedExchange.value?.let { exchange ->
                 viewModel.addExchange(exchange, apiKey, secret)
                 setResult(AppCompatActivity.RESULT_OK)
                 finish()
@@ -66,16 +67,16 @@ class AddExchangeActivity : AppCompatActivity() {
     }
 
     private fun bindViewModel() {
-        viewModel.getSelectedExchange().observe(this, selectedExchangeObserver)
-        viewModel.isAddExchangeEnabled().observe(this, addExchangeEnabledObserver)
+        observe(viewModel.selectedExchange, ::onSelectedExchangeUpdated)
+        observe(viewModel.isAddExchangeEnabled, ::onAddExchangeEnabledUpdated)
     }
 
-    private val selectedExchangeObserver = Observer<ExchangeName> {
-        bittrexButton.isSelected = it == ExchangeName.BITTREX
-        binanceButton.isSelected = it == ExchangeName.BINANCE
+    private fun onSelectedExchangeUpdated(exchangeName: ExchangeName?) {
+        bittrexButton.isSelected = exchangeName == ExchangeName.BITTREX
+        binanceButton.isSelected = exchangeName == ExchangeName.BINANCE
 
         apiExplanationText.text =
-                if (it == ExchangeName.BITTREX)
+                if (exchangeName == ExchangeName.BITTREX)
                     getString(R.string.add_exchange_bittrex_explanation)
                 else
                     getString(R.string.add_exchange_binance_explanation)
@@ -89,7 +90,7 @@ class AddExchangeActivity : AppCompatActivity() {
         apiKeyInput.showKeyboard(this)
     }
 
-    private val addExchangeEnabledObserver = Observer<Boolean> {
-        it?.let { isEnabled -> addExchangeButton.isEnabled = isEnabled }
+    private fun onAddExchangeEnabledUpdated(isAddExchangeEnabled: Boolean?) {
+        isAddExchangeEnabled?.let { isEnabled -> addExchangeButton.isEnabled = isEnabled }
     }
 }

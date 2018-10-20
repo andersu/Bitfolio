@@ -1,4 +1,4 @@
-package com.zredna.bitfolio.view.account.balances
+package com.zredna.bitfolio.ui.account.balances
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
@@ -6,7 +6,6 @@ import com.zredna.bitfolio.BaseLiveDataTest
 import com.zredna.bitfolio.db.datamodel.BalanceInBtc
 import com.zredna.bitfolio.domain.GetBalancesUseCase
 import com.zredna.bitfolio.repository.Resource
-import com.zredna.bitfolio.ui.account.balances.BalancesViewModel
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test

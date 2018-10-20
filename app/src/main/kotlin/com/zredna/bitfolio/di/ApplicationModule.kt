@@ -14,6 +14,7 @@ import com.zredna.bitfolio.converter.BittrexBalanceDtoConverter
 import com.zredna.bitfolio.converter.BittrexMarketSummaryDtoConverter
 import com.zredna.bitfolio.db.BitfolioDatabase
 import com.zredna.bitfolio.domain.GetBalancesUseCase
+import com.zredna.bitfolio.domain.SaveExchangeUseCase
 import com.zredna.bitfolio.repository.BalanceRepository
 import com.zredna.bitfolio.repository.ExchangeRepository
 import com.zredna.bitfolio.service.BinanceService
@@ -37,6 +38,8 @@ val bitfolioModule: Module = module {
     single { androidApplication().getSharedPreferences("bitfolio", Context.MODE_PRIVATE) }
 
     single { GetBalancesUseCase(get()) }
+    single { SaveExchangeUseCase(get()) }
+
     single { BalanceRepository(get(), get(), get(), get(), get()) }
     single { ExchangeRepository(get(), get()) }
 

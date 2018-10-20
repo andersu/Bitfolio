@@ -1,11 +1,10 @@
-package com.zredna.bitfolio.view.account.exchanges
+package com.zredna.bitfolio.ui.account.exchanges
 
 import androidx.lifecycle.MutableLiveData
 import com.zredna.bitfolio.BaseLiveDataTest
 import com.zredna.bitfolio.db.datamodel.Exchange
 import com.zredna.bitfolio.model.ExchangeCredentials
 import com.zredna.bitfolio.repository.ExchangeRepository
-import com.zredna.bitfolio.ui.account.exchanges.ExchangesViewModel
 import junit.framework.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
@@ -24,7 +23,6 @@ class ExchangesViewModelTest: BaseLiveDataTest() {
     fun setUp() {
         exchangesViewModel = ExchangesViewModel(exchangeRepository)
     }
-
 
     @Test
     fun getExchangeCredentialsEmptyList() {

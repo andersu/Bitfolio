@@ -11,9 +11,9 @@ import com.zredna.bitfolio.repository.Resource
 
 class BalancesViewModel(private val getBalances: GetBalancesUseCase) : ViewModel() {
 
-    private val mutableBalances = MediatorLiveData<Resource<List<BalanceInBtc>>>()
+    private val _balances = MediatorLiveData<Resource<List<BalanceInBtc>>>()
     val balances: LiveData<Resource<List<BalanceInBtc>>>
-        get() = mutableBalances
+        get() = _balances
 
     var totalBalance: LiveData<Double> = Transformations.map(balances) { resource ->
         resource.data?.sumByDouble { it.balanceInBtc }?.roundTo8()
@@ -21,8 +21,8 @@ class BalancesViewModel(private val getBalances: GetBalancesUseCase) : ViewModel
 
     init {
         postLoading()
-        mutableBalances.addSource(getBalances()) {
-            mutableBalances.value = it
+        _balances.addSource(getBalances()) {
+            _balances.value = it
         }
     }
 
@@ -32,6 +32,6 @@ class BalancesViewModel(private val getBalances: GetBalancesUseCase) : ViewModel
     }
 
     private fun postLoading() {
-        mutableBalances.value = Resource.loading(null)
+        _balances.value = Resource.loading(null)
     }
 }
