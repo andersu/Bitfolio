@@ -14,6 +14,9 @@ class ExchangeRepository(
 ) {
     private val exchanges = exchangeDao.getExchanges()
 
+    private fun apiKeyPreferenceKey(exchangeName: String) = "${exchangeName}_api_key"
+    private fun secretPreferenceKey(exchangeName: String) = "${exchangeName}_secret"
+
     fun saveExchange(exchangeCredentials: ExchangeCredentials) {
         Single.just(exchangeCredentials)
                 .subscribeOn(Schedulers.io())
@@ -24,11 +27,11 @@ class ExchangeRepository(
 
         val editor = sharedPreferences.edit()
         editor.putString(
-                "${exchangeCredentials.name}_api_key",
+                apiKeyPreferenceKey(exchangeCredentials.name),
                 exchangeCredentials.apiKey
         )
         editor.putString(
-                "${exchangeCredentials.name}_secret",
+                secretPreferenceKey(exchangeCredentials.name),
                 exchangeCredentials.secret
         )
 
@@ -40,13 +43,27 @@ class ExchangeRepository(
     }
 
     fun getCredentialsForExchange(exchangeName: String): ExchangeCredentials {
-        val apiKey = sharedPreferences.getString("${exchangeName}_api_key", "")
-        val secret = sharedPreferences.getString("${exchangeName}_secret", "")
+        val apiKey = sharedPreferences.getString(apiKeyPreferenceKey(exchangeName), "")
+        val secret = sharedPreferences.getString(secretPreferenceKey(exchangeName), "")
 
         return ExchangeCredentials(exchangeName, apiKey, secret)
     }
 
     fun containsCredentialsForExchange(exchangeName: String): Boolean {
         return getCredentialsForExchange(exchangeName).apiKey.isNotEmpty()
+    }
+
+    fun delete(exchangeCredentials: ExchangeCredentials) {
+        val exchangeName = exchangeCredentials.name
+        Single.just(exchangeCredentials)
+                .subscribeOn(Schedulers.io())
+                .doOnSuccess {
+                    val editor = sharedPreferences.edit()
+                    editor.remove(apiKeyPreferenceKey(exchangeName))
+                    editor.remove(secretPreferenceKey(exchangeName))
+                    editor.apply()
+                    exchangeDao.delete(Exchange(exchangeName))
+                }
+                .subscribe()
     }
 }

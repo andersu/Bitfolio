@@ -2,9 +2,11 @@ package com.zredna.bitfolio.db
 
 import androidx.lifecycle.LiveData
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import com.zredna.bitfolio.db.datamodel.Exchange
+import com.zredna.bitfolio.model.ExchangeCredentials
 
 @Dao
 interface ExchangeDao {
@@ -14,4 +16,7 @@ interface ExchangeDao {
 
     @Insert
     fun insert(exchange: Exchange)
+
+    @Delete
+    fun delete(exchange: Exchange)
 }

@@ -34,6 +34,9 @@ class ExchangesFragment: Fragment() {
     }
 
     private fun initView() {
+        exchangesAdapter.onDeleteClick = {
+            viewModel.deleteClicked(it)
+        }
         recyclerViewExchanges.adapter = exchangesAdapter
         recyclerViewExchanges.layoutManager = LinearLayoutManager(activity)
 

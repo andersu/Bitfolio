@@ -18,4 +18,8 @@ class ExchangesViewModel(
             }
 
     var exchanges = exchangeRepository.loadExchanges()
+
+    fun deleteClicked(exchangeCredentials: ExchangeCredentials) {
+        exchangeRepository.delete(exchangeCredentials)
+    }
 }
