@@ -1,7 +1,7 @@
 package com.zredna.bitfolio.di
 
-import androidx.room.Room
 import android.content.Context
+import androidx.room.Room
 import com.zredna.binanceapiclient.BinanceApiClient
 import com.zredna.binanceapiclient.BinanceCredentials
 import com.zredna.binanceapiclient.BinanceCredentialsProvider
@@ -26,9 +26,9 @@ import com.zredna.bittrex.apiclient.BittrexCredentialsProvider
 import org.koin.android.ext.koin.androidApplication
 import org.koin.androidx.viewmodel.ext.koin.viewModel
 import org.koin.dsl.module.Module
-import org.koin.dsl.module.applicationContext
+import org.koin.dsl.module.module
 
-val bitfolioModule: Module = applicationContext {
+val bitfolioModule: Module = module {
     viewModel { BalancesViewModel(get()) }
     viewModel { ExchangesViewModel(get()) }
     viewModel { AddExchangeViewModel(get()) }

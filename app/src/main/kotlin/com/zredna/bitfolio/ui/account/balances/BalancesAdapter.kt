@@ -13,7 +13,7 @@ class BalancesAdapter: RecyclerView.Adapter<BalancesAdapter.BalanceViewHolder>()
         }
 
     override fun onBindViewHolder(holder: BalanceViewHolder, position: Int) {
-        holder.balanceItemView.bind(balances.get(position))
+        holder.balanceItemView.bind(balances[position])
     }
 
     override fun getItemCount(): Int {

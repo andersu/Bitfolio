@@ -48,7 +48,7 @@ class BinanceAccountApiProvider {
             val intermediateUrl = originalHttpUrl.newBuilder()
                     .addQueryParameter("timestamp", "${Date().time}")
                     .addQueryParameter("recvWindow", "60000")
-                    .build();
+                    .build()
 
             var totalParams = intermediateUrl.query().toString()
             originalRequest.body()?.let {

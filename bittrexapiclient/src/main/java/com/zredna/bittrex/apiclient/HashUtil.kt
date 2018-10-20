@@ -9,7 +9,7 @@ object HashUtil {
         val hmacSha512 = "HmacSHA512"
         val mac = Mac.getInstance(hmacSha512)
         val keySpec = SecretKeySpec(byteKey, hmacSha512)
-        mac.init(keySpec);
+        mac.init(keySpec)
         val macData = mac.doFinal(string.toByteArray())
 
         return macData.toHex()
@@ -17,7 +17,7 @@ object HashUtil {
 
     private val HEX_CHARS = "0123456789ABCDEF".toCharArray()
 
-    fun ByteArray.toHex(): String {
+    private fun ByteArray.toHex(): String {
         val result = StringBuffer()
 
         forEach {

@@ -1,4 +1,4 @@
-package com.zredna.bitfolio
+package com.zredna.bitfolio.extensions
 
 import java.math.BigDecimal
 

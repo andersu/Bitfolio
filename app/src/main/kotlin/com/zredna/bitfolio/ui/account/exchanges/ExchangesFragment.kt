@@ -42,8 +42,8 @@ class ExchangesFragment: Fragment() {
 
     private fun bindViewModel() {
         viewModel.exchangeCredentials.observe(this, Observer {
-            it?.let {
-                exchangesAdapter.exchangeCredentials = it
+            it?.let { exchangeCredentials ->
+                exchangesAdapter.exchangeCredentials = exchangeCredentials
             }
         })
     }

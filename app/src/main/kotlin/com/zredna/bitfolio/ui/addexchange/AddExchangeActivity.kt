@@ -57,8 +57,8 @@ class AddExchangeActivity : AppCompatActivity() {
         addExchangeButton.setOnClickListener {
             val apiKey = apiKeyInput.text.toString()
             val secret = secretInput.text.toString()
-            viewModel.getSelectedExchange().value?.let {
-                viewModel.addExchange(it, apiKey, secret)
+            viewModel.getSelectedExchange().value?.let { exchange ->
+                viewModel.addExchange(exchange, apiKey, secret)
                 setResult(AppCompatActivity.RESULT_OK)
                 finish()
             }
@@ -81,14 +81,15 @@ class AddExchangeActivity : AppCompatActivity() {
                     getString(R.string.add_exchange_binance_explanation)
         apiExplanationText.movementMethod = LinkMovementMethod.getInstance()
 
-        listOf(apiKeyInput, apiKeyLabel, secretInput, secretLabel, apiExplanationText).forEach {
-            it.visibility = View.VISIBLE
-        }
+        listOf(apiKeyInput, apiKeyLabel, secretInput, secretLabel, apiExplanationText)
+                .forEach { textView ->
+                    textView.visibility = View.VISIBLE
+                }
 
         apiKeyInput.showKeyboard(this)
     }
 
     private val addExchangeEnabledObserver = Observer<Boolean> {
-        it?.let { addExchangeButton.isEnabled = it }
+        it?.let { isEnabled -> addExchangeButton.isEnabled = isEnabled }
     }
 }

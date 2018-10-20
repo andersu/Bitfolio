@@ -8,7 +8,7 @@ import com.zredna.bitfolio.MarketSummary
 import com.zredna.bitfolio.db.BalanceDao
 import com.zredna.bitfolio.db.datamodel.BalanceInBtc
 import com.zredna.bitfolio.model.Balance
-import com.zredna.bitfolio.roundTo8
+import com.zredna.bitfolio.extensions.roundTo8
 import com.zredna.bitfolio.service.BinanceService
 import com.zredna.bitfolio.service.BittrexService
 import io.reactivex.Single

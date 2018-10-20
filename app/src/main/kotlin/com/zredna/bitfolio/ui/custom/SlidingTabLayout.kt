@@ -161,7 +161,7 @@ class SlidingTabLayout @JvmOverloads constructor(context: Context, attrs: Attrib
 
 
         // If we're running on ICS or newer, enable all-caps to match the Action Bar tab style
-        textView.setAllCaps(true)
+        textView.isAllCaps = true
 
 
         val padding = (TAB_VIEW_PADDING_DIPS * resources.displayMetrics.density).toInt()

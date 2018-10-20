@@ -21,7 +21,7 @@ class ExchangesAdapter: RecyclerView.Adapter<ExchangesAdapter.ExchangeViewHolder
     }
 
     override fun onBindViewHolder(holder: ExchangeViewHolder, position: Int) {
-        holder.exchangeItemView.bind(exchangeCredentials.get(position))
+        holder.exchangeItemView.bind(exchangeCredentials[position])
     }
 
     inner class ExchangeViewHolder(

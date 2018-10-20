@@ -3,9 +3,6 @@ package com.zredna.binanceapiclient
 import com.zredna.binanceapiclient.dto.AccountInformationDto
 import com.zredna.binanceapiclient.dto.MarketSummaryDto
 import io.reactivex.Single
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 class BinanceApiClient private constructor(
         private val binanceAccountApi: BinanceAccountApi,

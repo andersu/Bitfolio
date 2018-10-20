@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModel
 import com.zredna.bitfolio.db.datamodel.BalanceInBtc
 import com.zredna.bitfolio.repository.BalanceRepository
 import com.zredna.bitfolio.repository.Resource
-import com.zredna.bitfolio.roundTo8
+import com.zredna.bitfolio.extensions.roundTo8
 
 class BalancesViewModel(
         private val balanceRepository: BalanceRepository
