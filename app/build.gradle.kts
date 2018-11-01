@@ -55,9 +55,8 @@ dependencies {
     implementation(Config.Libs.room)
     kapt(Config.Libs.roomCompiler)
 
-    // RxJava
-    implementation(Config.Libs.rxjava)
-    implementation(Config.Libs.rxandroid)
+    // Coroutines
+    implementation(Config.Libs.coroutinesAndroid)
 
     // Testing
     testImplementation(Config.TestLibs.junit)

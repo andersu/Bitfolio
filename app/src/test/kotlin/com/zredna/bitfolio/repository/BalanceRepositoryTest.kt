@@ -3,14 +3,14 @@ package com.zredna.bitfolio.repository
 import androidx.lifecycle.MutableLiveData
 import com.zredna.bitfolio.BaseLiveDataTest
 import com.zredna.bitfolio.BtcBalanceCalculator
-import com.zredna.bitfolio.domain.model.ExchangeName
-import com.zredna.bitfolio.domain.model.MarketSummary
 import com.zredna.bitfolio.db.BalanceDao
 import com.zredna.bitfolio.db.datamodel.BalanceInBtc
 import com.zredna.bitfolio.domain.model.Balance
+import com.zredna.bitfolio.domain.model.ExchangeName
+import com.zredna.bitfolio.domain.model.MarketSummary
 import com.zredna.bitfolio.service.BinanceService
 import com.zredna.bitfolio.service.BittrexService
-import io.reactivex.Single.just
+import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import org.mockito.BDDMockito.given
@@ -41,21 +41,21 @@ class BalanceRepositoryTest : BaseLiveDataTest() {
     private lateinit var binanceMarketSummaries: List<MarketSummary>
 
     @Test
-    fun loadBalancesReturnsBalancesFromDao() {
+    fun loadBalancesReturnsBalancesFromDao() = runBlocking {
         val balancesLiveData = MutableLiveData<List<BalanceInBtc>>()
         val balances = emptyList<BalanceInBtc>()
         balancesLiveData.value = balances
 
-        given(bittrexService.getBalances()).willReturn(just(bittrexBalances))
-        given(bittrexService.getMarketSummaries()).willReturn(just(bittrexMarketSummaries))
+        given(bittrexService.getBalances()).willReturn(bittrexBalances)
+        given(bittrexService.getMarketSummaries()).willReturn(bittrexMarketSummaries)
         given(balanceDao.getBalances()).willReturn(balancesLiveData)
         given(exchangeRepository.containsCredentialsForExchange(ExchangeName.BITTREX))
                 .willReturn(true)
         given(exchangeRepository.containsCredentialsForExchange(ExchangeName.BINANCE))
                 .willReturn(true)
 
-        given(binanceService.getBalances()).willReturn(just(binanceBalances))
-        given(binanceService.getMarketSummaries()).willReturn(just(binanceMarketSummaries))
+        given(binanceService.getBalances()).willReturn(binanceBalances)
+        given(binanceService.getMarketSummaries()).willReturn(binanceMarketSummaries)
 
         balanceRepository = BalanceRepository(
                 bittrexService,
@@ -69,6 +69,4 @@ class BalanceRepositoryTest : BaseLiveDataTest() {
             assertEquals(Resource.success(balances), it)
         }
     }
-
-    // TODO: Figure out how to test that new balances from the network is inserted using Dao
 }

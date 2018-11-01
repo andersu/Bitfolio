@@ -2,19 +2,19 @@ package com.zredna.bittrex.apiclient
 
 import com.zredna.bittrex.apiclient.dto.GetBalancesResponseDto
 import com.zredna.bittrex.apiclient.dto.GetMarketSummariesResponseDto
-import io.reactivex.Single
+import kotlinx.coroutines.Deferred
 import java.util.*
 
 class BittrexApiClient private constructor(
         private val bittrexAccountApi: BittrexAccountApi,
         private val bittrexPublicApi: BittrexPublicApi
 ) {
-    fun getBalances(): Single<GetBalancesResponseDto> {
+    fun getBalances(): Deferred<GetBalancesResponseDto> {
         val nonce = Date().time
         return bittrexAccountApi.getBalances(nonce.toString())
     }
 
-    fun getMarketSummaries(): Single<GetMarketSummariesResponseDto> {
+    fun getMarketSummaries(): Deferred<GetMarketSummariesResponseDto> {
         return bittrexPublicApi.getMarketSummaries()
     }
 

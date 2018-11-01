@@ -3,18 +3,20 @@ package com.zredna.bitfolio.repository
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import com.zredna.bitfolio.BtcBalanceCalculator
-import com.zredna.bitfolio.domain.model.ExchangeName
-import com.zredna.bitfolio.domain.model.MarketSummary
 import com.zredna.bitfolio.db.BalanceDao
 import com.zredna.bitfolio.db.datamodel.BalanceInBtc
 import com.zredna.bitfolio.domain.model.Balance
+import com.zredna.bitfolio.domain.model.ExchangeName
+import com.zredna.bitfolio.domain.model.MarketSummary
 import com.zredna.bitfolio.extensions.roundTo8
 import com.zredna.bitfolio.service.BinanceService
 import com.zredna.bitfolio.service.BittrexService
-import io.reactivex.Single
-import io.reactivex.functions.Function4
-import io.reactivex.schedulers.Schedulers
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
+import kotlin.coroutines.CoroutineContext
 
 class BalanceRepository(
         private val bittrexService: BittrexService,
@@ -22,7 +24,12 @@ class BalanceRepository(
         private val balanceDao: BalanceDao,
         private val btcBalanceCalculator: BtcBalanceCalculator,
         private val exchangeRepository: ExchangeRepository
-) {
+) : CoroutineScope {
+
+    private val job = Job()
+    override val coroutineContext: CoroutineContext
+        get() = Dispatchers.IO + job
+
     private val balancesInBtc = balanceDao.getBalances()
     private val balancesInBtcResource = MediatorLiveData<Resource<List<BalanceInBtc>>>()
 
@@ -43,41 +50,37 @@ class BalanceRepository(
     }
 
     private fun fetchFromNetwork() {
-        val bittrexBalances =
+        launch(Dispatchers.IO) {
+            val bittrexBalances = async {
                 if (exchangeRepository.containsCredentialsForExchange(ExchangeName.BITTREX)) {
                     bittrexService.getBalances()
                 } else {
-                    Single.just(emptyList())
+                    emptyList()
                 }
+            }
 
-        launch {
-            val binanceBalances =
-                    if (exchangeRepository.containsCredentialsForExchange(ExchangeName.BINANCE)) {
-                        binanceService.getBalances()
-                    } else {
-                        emptyList()
-                    }
+            val binanceBalances = async {
+                if (exchangeRepository.containsCredentialsForExchange(ExchangeName.BINANCE)) {
+                    binanceService.getBalances()
+                } else {
+                    emptyList()
+                }
+            }
 
-            Single.zip(
-                    bittrexBalances,
-                    Single.just(binanceBalances),
-                    bittrexService.getMarketSummaries(),
-                    Single.just(binanceService.getMarketSummaries()),
-                    Function4<List<Balance>, List<Balance>, List<MarketSummary>, List<MarketSummary>, List<BalanceInBtc>> { bittrexBalances, binanceBalances, bittrexMarketSummaries, binanceMarketSummaries ->
-                        val bittrexBalancesInBtc = calculateBalancesInBtc(bittrexBalances, bittrexMarketSummaries)
-                        val binanceBalanceInBtc = calculateBalancesInBtc(binanceBalances, binanceMarketSummaries)
-                        mergeBalancesInBtc(bittrexBalancesInBtc, binanceBalanceInBtc)
-                    })
-                    .subscribeOn(Schedulers.io())
-                    .doOnSuccess { balancesInBtc ->
-                        // Inserting in the database will trigger an update on the livedata
-                        balanceDao.insertBalances(balancesInBtc)
-                    }
-                    .onErrorResumeNext {
-                        print(it)
-                        Single.just(emptyList())
-                    }
-                    .subscribe()
+            val bittrexMarketSummaries = async {
+                bittrexService.getMarketSummaries()
+            }
+
+            val binanceMarketSummaries = async {
+                binanceService.getMarketSummaries()
+            }
+
+            val bittrexBalancesInBtc = calculateBalancesInBtc(bittrexBalances.await(),
+                    bittrexMarketSummaries.await())
+            val binanceBalanceInBtc = calculateBalancesInBtc(binanceBalances.await(),
+                    binanceMarketSummaries.await())
+            val balancesInBtc = mergeBalancesInBtc(bittrexBalancesInBtc, binanceBalanceInBtc)
+            balanceDao.insertBalances(balancesInBtc)
         }
     }
 

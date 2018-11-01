@@ -7,13 +7,10 @@ plugins {
 dependencies {
     implementation(Config.Libs.kotlinStdlib)
 
-    // RxJava
-    implementation(Config.Libs.rxjava)
-
     // Retrofit
     implementation(Config.Libs.retrofit)
     implementation(Config.Libs.retrofitGson)
-    implementation(Config.Libs.retrofitRxjava)
+    implementation(Config.Libs.retrofitCoroutinesAdapter)
     implementation(Config.Libs.okhttpLogging)
 }
 

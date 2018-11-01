@@ -7,6 +7,7 @@ import com.zredna.bitfolio.db.ExchangeDao
 import com.zredna.bitfolio.db.datamodel.Exchange
 import com.zredna.bitfolio.domain.model.ExchangeCredentials
 import com.zredna.bitfolio.domain.model.ExchangeName
+import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
@@ -51,7 +52,9 @@ class ExchangeRepositoryTest: BaseLiveDataTest() {
         val exchangeName = ExchangeName.BITTREX
         setUpSaveExchangeTest(exchangeName = exchangeName)
 
-        exchangeRepository.saveExchange(exchangeCredentials)
+        runBlocking {
+            exchangeRepository.saveExchange(exchangeCredentials)
+        }
 
         verify(exchangeDao).insert(Exchange(exchangeName.name))
     }
@@ -59,14 +62,16 @@ class ExchangeRepositoryTest: BaseLiveDataTest() {
     @Test
     fun saveExchangeSavesApiKeyAndSecretInPreferences() {
         val apiKey = "apiKey"
-        val name = ExchangeName.BITTREX
+        val exchangeName = ExchangeName.BITTREX
         val secret = "secret"
-        setUpSaveExchangeTest(name, apiKey, secret)
+        setUpSaveExchangeTest(exchangeName, apiKey, secret)
 
-        exchangeRepository.saveExchange(exchangeCredentials)
+        runBlocking {
+            exchangeRepository.saveExchange(exchangeCredentials)
+        }
 
-        verify(sharedPreferencesEditor).putString("${name}_api_key", apiKey)
-        verify(sharedPreferencesEditor).putString("${name}_secret", secret)
+        verify(sharedPreferencesEditor).putString("${exchangeName.name}_api_key", apiKey)
+        verify(sharedPreferencesEditor).putString("${exchangeName.name}_secret", secret)
         verify(sharedPreferencesEditor).apply()
     }
 
@@ -140,7 +145,9 @@ class ExchangeRepositoryTest: BaseLiveDataTest() {
         given(exchangeCredentials.name).willReturn(exchangeName)
         given(sharedPreferences.edit()).willReturn(sharedPreferencesEditor)
 
-        exchangeRepository.delete(exchangeCredentials)
+        runBlocking {
+            exchangeRepository.delete(exchangeCredentials)
+        }
 
         verify(sharedPreferencesEditor).remove("${exchangeName.name}_api_key")
         verify(sharedPreferencesEditor).remove("${exchangeName.name}_secret")
@@ -155,7 +162,9 @@ class ExchangeRepositoryTest: BaseLiveDataTest() {
         given(exchangeCredentials.name).willReturn(exchangeName)
         given(sharedPreferences.edit()).willReturn(sharedPreferencesEditor)
 
-        exchangeRepository.delete(exchangeCredentials)
+        runBlocking {
+            exchangeRepository.delete(exchangeCredentials)
+        }
 
         verify(exchangeDao).delete(Exchange(exchangeName.name))
     }
