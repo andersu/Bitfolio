@@ -2,18 +2,18 @@ package com.zredna.binanceapiclient
 
 import com.zredna.binanceapiclient.dto.AccountInformationDto
 import com.zredna.binanceapiclient.dto.MarketSummaryDto
-import io.reactivex.Single
+import kotlinx.coroutines.Deferred
 
 class BinanceApiClient private constructor(
         private val binanceAccountApi: BinanceAccountApi,
         private val binancePublicApi: BinancePublicApi
 ) {
 
-    fun getAccountInformation(): Single<AccountInformationDto> {
+    fun getAccountInformation(): Deferred<AccountInformationDto> {
         return binanceAccountApi.getAccountInformation()
     }
 
-    fun getMarketSummaries(): Single<List<MarketSummaryDto>> {
+    fun getMarketSummaries(): Deferred<List<MarketSummaryDto>> {
         return binancePublicApi.getAllPrices()
     }
 

@@ -14,6 +14,7 @@ import com.zredna.bitfolio.service.BittrexService
 import io.reactivex.Single
 import io.reactivex.functions.Function4
 import io.reactivex.schedulers.Schedulers
+import kotlinx.coroutines.launch
 
 class BalanceRepository(
         private val bittrexService: BittrexService,
@@ -49,33 +50,35 @@ class BalanceRepository(
                     Single.just(emptyList())
                 }
 
-        val binanceBalances =
-                if (exchangeRepository.containsCredentialsForExchange(ExchangeName.BINANCE)) {
-                    binanceService.getBalances()
-                } else {
-                    Single.just(emptyList())
-                }
+        launch {
+            val binanceBalances =
+                    if (exchangeRepository.containsCredentialsForExchange(ExchangeName.BINANCE)) {
+                        binanceService.getBalances()
+                    } else {
+                        emptyList()
+                    }
 
-        Single.zip(
-                bittrexBalances,
-                binanceBalances,
-                bittrexService.getMarketSummaries(),
-                binanceService.getMarketSummaries(),
-                Function4<List<Balance>, List<Balance>, List<MarketSummary>, List<MarketSummary>, List<BalanceInBtc>> { bittrexBalances, binanceBalances, bittrexMarketSummaries, binanceMarketSummaries ->
-                    val bittrexBalancesInBtc = calculateBalancesInBtc(bittrexBalances, bittrexMarketSummaries)
-                    val binanceBalanceInBtc = calculateBalancesInBtc(binanceBalances, binanceMarketSummaries)
-                    mergeBalancesInBtc(bittrexBalancesInBtc, binanceBalanceInBtc)
-                })
-                .subscribeOn(Schedulers.io())
-                .doOnSuccess { balancesInBtc ->
-                    // Inserting in the database will trigger an update on the livedata
-                    balanceDao.insertBalances(balancesInBtc)
-                }
-                .onErrorResumeNext {
-                    print(it)
-                    Single.just(emptyList())
-                }
-                .subscribe()
+            Single.zip(
+                    bittrexBalances,
+                    Single.just(binanceBalances),
+                    bittrexService.getMarketSummaries(),
+                    Single.just(binanceService.getMarketSummaries()),
+                    Function4<List<Balance>, List<Balance>, List<MarketSummary>, List<MarketSummary>, List<BalanceInBtc>> { bittrexBalances, binanceBalances, bittrexMarketSummaries, binanceMarketSummaries ->
+                        val bittrexBalancesInBtc = calculateBalancesInBtc(bittrexBalances, bittrexMarketSummaries)
+                        val binanceBalanceInBtc = calculateBalancesInBtc(binanceBalances, binanceMarketSummaries)
+                        mergeBalancesInBtc(bittrexBalancesInBtc, binanceBalanceInBtc)
+                    })
+                    .subscribeOn(Schedulers.io())
+                    .doOnSuccess { balancesInBtc ->
+                        // Inserting in the database will trigger an update on the livedata
+                        balanceDao.insertBalances(balancesInBtc)
+                    }
+                    .onErrorResumeNext {
+                        print(it)
+                        Single.just(emptyList())
+                    }
+                    .subscribe()
+        }
     }
 
     private fun calculateBalancesInBtc(

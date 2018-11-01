@@ -1,6 +1,6 @@
 package com.zredna.bitfolio
 
-private const val kotlinVersion = "1.3.0-rc-146"
+private const val kotlinVersion = "1.3.0"
 private const val androidGradleVersion = "3.2.1"
 
 // Compile dependencies
@@ -9,9 +9,10 @@ private const val recyclerViewVersion = "1.0.0"
 private const val constraintLayoutVersion = "1.1.3"
 
 private const val retrofitVersion = "2.4.0"
+private const val retrofitCoroutinesAdapterVersion = "0.9.2"
 private const val okhttpVersion = "3.10.0"
 
-private const val coroutinesVersion = "0.26.1-eap13"
+private const val coroutinesVersion = "1.0.0"
 private const val lifecycleVersion = "2.0.0"
 private const val koinVersion = "1.0.1"
 private const val roomVersion = "2.0.0"
@@ -59,6 +60,7 @@ object Config {
         val retrofit = "com.squareup.retrofit2:retrofit:$retrofitVersion"
         val retrofitGson = "com.squareup.retrofit2:converter-gson:$retrofitVersion"
         val retrofitRxjava = "com.squareup.retrofit2:adapter-rxjava2:$retrofitVersion"
+        val retrofitCoroutinesAdapter = "com.jakewharton.retrofit:retrofit2-kotlin-coroutines-adapter:$retrofitCoroutinesAdapterVersion"
     }
 
     object TestLibs {
