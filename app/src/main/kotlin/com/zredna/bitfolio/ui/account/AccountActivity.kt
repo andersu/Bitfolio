@@ -33,7 +33,8 @@ class AccountActivity : AppCompatActivity() {
 
         viewPager.adapter = AccountPagerAdapter(
                 listOf(BalancesFragment(), exchangesFragment),
-                supportFragmentManager
+                supportFragmentManager,
+                this
         )
         tabLayout.setCustomTabView(R.layout.view_tab_account, R.id.tabTitleView)
         tabLayout.setViewPager(viewPager)

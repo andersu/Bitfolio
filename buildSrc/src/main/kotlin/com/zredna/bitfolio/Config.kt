@@ -19,9 +19,11 @@ private const val roomVersion = "2.0.0"
 private const val rxjavaVersion = "2.1.14"
 private const val rxandroidVersion = "2.0.2"
 
-// Unit tests
+// Tests
 private const val junitVersion = "4.12"
 private const val mockitoVersion = "2.23.0"
+private const val androidxTestVersion = "1.1.0"
+private const val espressoVersion = "3.1.0"
 
 object Config {
 
@@ -66,10 +68,14 @@ object Config {
     object TestLibs {
         val archCoreTesting = "androidx.arch.core:core-testing:$lifecycleVersion"
         val junit = "junit:junit:$junitVersion"
-        val mockito = "org.mockito:mockito-core:$mockitoVersion"
+        val mockitoCore = "org.mockito:mockito-core:$mockitoVersion"
+        val mockitoAndroid = "org.mockito:mockito-android:$mockitoVersion"
         val dexmaker = "com.google.dexmaker:dexmaker:1.2"
         val dexmaker_mockito = "com.google.dexmaker:dexmaker-mockito:1.2"
         val annotations = "com.android.support:support-annotations:$supportVersion"
-        val espresso = "com.android.support.test.espresso:espresso-core:2.2.2"
+        val espresso = "androidx.test.espresso:espresso-core:$espressoVersion"
+        val testRunner = "androidx.test:runner:$androidxTestVersion"
+        val testRules = "androidx.test:rules:$androidxTestVersion"
+        val testJunit = "androidx.test.ext:junit:1.0.0"
     }
 }

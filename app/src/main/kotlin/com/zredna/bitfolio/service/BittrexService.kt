@@ -17,7 +17,7 @@ class BittrexService(
             getBalancesResponseDto.result?.let { balanceDtos ->
                 return bittrexBalanceDtoConverter
                         .convertToModels(balanceDtos)
-                        .filter { balance -> balance.balance > 0 }
+                        .filter { it.balance > 0 }
             }
         } else {
             // TODO: Error handling/returning

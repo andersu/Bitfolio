@@ -17,8 +17,9 @@ android {
         targetSdkVersion(Config.Android.targetSdkVersion)
         versionCode = Config.Android.versionCode
         versionName = Config.Android.versionName
-        testInstrumentationRunner = "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
+
     buildTypes {
         getByName("debug") {
             isDebuggable = true
@@ -33,6 +34,7 @@ android {
     sourceSets {
         getByName("main").java.srcDirs("src/main/kotlin")
         getByName("test").java.srcDirs("src/test/kotlin")
+        getByName("androidTest").java.srcDirs("src/androidTest/kotlin")
     }
 }
 
@@ -60,8 +62,14 @@ dependencies {
 
     // Testing
     testImplementation(Config.TestLibs.junit)
-    testImplementation(Config.TestLibs.mockito)
+    testImplementation(Config.TestLibs.mockitoCore)
     testImplementation(Config.TestLibs.archCoreTesting)
+
+    androidTestImplementation(Config.TestLibs.testRunner)
+    androidTestImplementation(Config.TestLibs.testRules)
+    androidTestImplementation(Config.TestLibs.testJunit)
+    androidTestImplementation(Config.TestLibs.espresso)
+    androidTestImplementation(Config.TestLibs.mockitoAndroid)
 
     implementation(project(":bittrexapiclient"))
     implementation(project(":binanceapiclient"))
