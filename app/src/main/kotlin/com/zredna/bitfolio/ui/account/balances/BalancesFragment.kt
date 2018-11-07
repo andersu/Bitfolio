@@ -104,7 +104,9 @@ class BalancesFragment : Fragment() {
                 coordinatorLayout,
                 R.string.get_balances_error,
                 Snackbar.LENGTH_INDEFINITE
-        ).show()
+        ).setAction(R.string.retry) {
+            viewModel.refresh()
+        }.show()
     }
     // endregion
 }

@@ -20,8 +20,7 @@ class BittrexService(
                         .filter { it.balance > 0 }
             }
         } else {
-            // TODO: Error handling/returning
-            throw Error()
+            throw Exception("Failed to get balances from Bittrex")
         }
 
         return emptyList()

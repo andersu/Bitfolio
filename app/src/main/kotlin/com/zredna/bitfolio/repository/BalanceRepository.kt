@@ -16,6 +16,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.supervisorScope
 import kotlin.coroutines.CoroutineContext
 
 class BalanceRepository(
@@ -51,36 +52,43 @@ class BalanceRepository(
 
     private fun fetchFromNetwork() {
         launch(Dispatchers.IO) {
-            val bittrexBalances = async {
-                if (exchangeRepository.containsCredentialsForExchange(ExchangeName.BITTREX)) {
-                    bittrexService.getBalances()
-                } else {
-                    emptyList()
+
+            supervisorScope {
+                val bittrexBalances = async {
+                    if (exchangeRepository.containsCredentialsForExchange(ExchangeName.BITTREX)) {
+                        bittrexService.getBalances()
+                    } else {
+                        emptyList()
+                    }
+                }
+
+                val binanceBalances = async {
+                    if (exchangeRepository.containsCredentialsForExchange(ExchangeName.BINANCE)) {
+                        binanceService.getBalances()
+                    } else {
+                        emptyList()
+                    }
+                }
+
+                val bittrexMarketSummaries = async {
+                    bittrexService.getMarketSummaries()
+                }
+
+                val binanceMarketSummaries = async {
+                    binanceService.getMarketSummaries()
+                }
+
+                try {
+                    val bittrexBalancesInBtc = calculateBalancesInBtc(bittrexBalances.await(),
+                            bittrexMarketSummaries.await())
+                    val binanceBalanceInBtc = calculateBalancesInBtc(binanceBalances.await(),
+                            binanceMarketSummaries.await())
+                    val balancesInBtc = mergeBalancesInBtc(bittrexBalancesInBtc, binanceBalanceInBtc)
+                    balanceDao.insertBalances(balancesInBtc)
+                } catch (exception: Exception) {
+                    balancesInBtcResource.postValue(Resource.error("Failed to get balances", null))
                 }
             }
-
-            val binanceBalances = async {
-                if (exchangeRepository.containsCredentialsForExchange(ExchangeName.BINANCE)) {
-                    binanceService.getBalances()
-                } else {
-                    emptyList()
-                }
-            }
-
-            val bittrexMarketSummaries = async {
-                bittrexService.getMarketSummaries()
-            }
-
-            val binanceMarketSummaries = async {
-                binanceService.getMarketSummaries()
-            }
-
-            val bittrexBalancesInBtc = calculateBalancesInBtc(bittrexBalances.await(),
-                    bittrexMarketSummaries.await())
-            val binanceBalanceInBtc = calculateBalancesInBtc(binanceBalances.await(),
-                    binanceMarketSummaries.await())
-            val balancesInBtc = mergeBalancesInBtc(bittrexBalancesInBtc, binanceBalanceInBtc)
-            balanceDao.insertBalances(balancesInBtc)
         }
     }
 
