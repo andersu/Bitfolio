@@ -57,11 +57,13 @@ class ExchangeRepository(
 
     // TODO: Move to LocalDataSource as suspend fun
     fun delete(exchangeCredentials: ExchangeCredentials) {
-        val exchangeName = exchangeCredentials.name
-        val editor = sharedPreferences.edit()
-        editor.remove(apiKeyPreferenceKey(exchangeName))
-        editor.remove(secretPreferenceKey(exchangeName))
-        editor.apply()
-        exchangeDao.delete(Exchange(exchangeName.name))
+        launch {
+            val exchangeName = exchangeCredentials.name
+            val editor = sharedPreferences.edit()
+            editor.remove(apiKeyPreferenceKey(exchangeName))
+            editor.remove(secretPreferenceKey(exchangeName))
+            editor.apply()
+            exchangeDao.delete(Exchange(exchangeName.name))
+        }
     }
 }

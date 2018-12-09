@@ -17,10 +17,13 @@ import kotlinx.android.synthetic.main.fragment_balances.*
 import observe
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import com.google.android.material.snackbar.Snackbar
+import com.zredna.bitfolio.db.datamodel.Exchange
+import com.zredna.bitfolio.ui.account.exchanges.ExchangesViewModel
 
 
 class BalancesFragment : Fragment() {
     private val viewModel by viewModel<BalancesViewModel>()
+    private val exchangesViewModel by viewModel<ExchangesViewModel>()
 
     private val balancesAdapter = BalancesAdapter()
 
@@ -39,13 +42,6 @@ class BalancesFragment : Fragment() {
         bindViewModel()
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == REQUEST_CODE_ADD_EXCHANGE && resultCode == AppCompatActivity.RESULT_OK) {
-            viewModel.refresh()
-        }
-    }
-
     private fun initView() {
         recyclerViewBalances.adapter = balancesAdapter
         recyclerViewBalances.layoutManager = LinearLayoutManager(activity)
@@ -57,6 +53,7 @@ class BalancesFragment : Fragment() {
     private fun bindViewModel() {
         observe(viewModel.balances, ::onBalancesUpdated)
         observe(viewModel.totalBalance, ::onTotalBalanceUpdated)
+        observe(exchangesViewModel.exchanges, ::onExchangesUpdated)
     }
 
     private fun onBalancesUpdated(balancesResource: Resource<List<BalanceInBtc>>?) {
@@ -77,6 +74,10 @@ class BalancesFragment : Fragment() {
 
     private fun onTotalBalanceUpdated(totalBalance: Double?) {
         totalBalance?.let { textViewTotalBalance.text = "฿ $it" }
+    }
+
+    private fun onExchangesUpdated(exchanges: List<Exchange>?) {
+        viewModel.refresh()
     }
     // endregion
 

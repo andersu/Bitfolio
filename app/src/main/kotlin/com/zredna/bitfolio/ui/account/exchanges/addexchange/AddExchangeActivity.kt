@@ -59,7 +59,6 @@ class AddExchangeActivity : AppCompatActivity() {
             val secret = secretInput.text.toString()
             viewModel.selectedExchange.value?.let { exchange ->
                 viewModel.addExchange(exchange, apiKey, secret)
-                setResult(AppCompatActivity.RESULT_OK)
                 finish()
             }
         }

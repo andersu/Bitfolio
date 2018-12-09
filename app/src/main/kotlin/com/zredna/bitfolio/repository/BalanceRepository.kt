@@ -84,6 +84,13 @@ class BalanceRepository(
                     val binanceBalanceInBtc = calculateBalancesInBtc(binanceBalances.await(),
                             binanceMarketSummaries.await())
                     val balancesInBtc = mergeBalancesInBtc(bittrexBalancesInBtc, binanceBalanceInBtc)
+
+                    if (balancesInBtc.isEmpty()) {
+                        // If the balance list is empty the insert won't trigger the LiveData,
+                        // so we need to post
+                        balancesInBtcResource.postValue(Resource.success(balancesInBtc))
+                    }
+
                     balanceDao.insertBalances(balancesInBtc)
                 } catch (exception: Exception) {
                     balancesInBtcResource.postValue(Resource.error("Failed to get balances", null))
@@ -139,5 +146,11 @@ class BalanceRepository(
         balancesInBtc.forEach { it.balanceInBtc.roundTo8() }
 
         return balancesInBtc
+    }
+
+    fun deleteBalances() {
+        launch {
+            balanceDao.deleteBalances()
+        }
     }
 }

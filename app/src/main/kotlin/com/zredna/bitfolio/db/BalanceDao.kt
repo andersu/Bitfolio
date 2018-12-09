@@ -2,6 +2,7 @@ package com.zredna.bitfolio.db
 
 import androidx.lifecycle.LiveData
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
@@ -15,4 +16,7 @@ interface BalanceDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertBalances(balances: List<BalanceInBtc>)
+
+    @Query("DELETE FROM balances")
+    fun deleteBalances()
 }

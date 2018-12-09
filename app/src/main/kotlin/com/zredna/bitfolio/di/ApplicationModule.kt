@@ -13,6 +13,7 @@ import com.zredna.bitfolio.domain.converter.BinanceMarketSummaryDtoConverter
 import com.zredna.bitfolio.domain.converter.BittrexBalanceDtoConverter
 import com.zredna.bitfolio.domain.converter.BittrexMarketSummaryDtoConverter
 import com.zredna.bitfolio.db.BitfolioDatabase
+import com.zredna.bitfolio.domain.DeleteBalancesUseCase
 import com.zredna.bitfolio.domain.DeleteExchangeUseCase
 import com.zredna.bitfolio.domain.GetBalancesUseCase
 import com.zredna.bitfolio.domain.GetExchangeCredentialsUseCase
@@ -36,12 +37,13 @@ import org.koin.dsl.module.module
 val bitfolioModule: Module = module {
     // ViewModels
     viewModel { BalancesViewModel(get()) }
-    viewModel { ExchangesViewModel(get(), get(), get()) }
+    viewModel { ExchangesViewModel(get(), get(), get(), get()) }
     viewModel { AddExchangeViewModel(get()) }
 
     // UseCases
-    single { DeleteExchangeUseCase(get()) }
     single { GetBalancesUseCase(get()) }
+    single { DeleteBalancesUseCase(get()) }
+    single { DeleteExchangeUseCase(get()) }
     single { GetExchangeCredentialsUseCase(get()) }
     single { GetExchangesUseCase(get()) }
     single { SaveExchangeUseCase(get()) }
